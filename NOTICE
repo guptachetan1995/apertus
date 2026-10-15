@@ -1,0 +1,33 @@
+Multilingual Review-Reply Triage
+Hack Apertus 2026, Track 2B (Own Project)
+
+Copyright (c) 2026 Chetan Gupta
+
+The author keeps authorship and copyright. The repository is licensed in three parts, as Section 6
+of the Hack Apertus Terms and Conditions sets out (https://hackapertus.ch/terms-and-conditions,
+read 7 Oct 2026).
+
+1. Source code: Apache License, Version 2.0 (SPDX: Apache-2.0). The full text is in LICENSE.
+   This covers every program and build file: track_2b/src/, track_2b/scripts/, track_2b/tests/,
+   track_2b/Dockerfile, track_2b/.dockerignore, both Makefiles, track_2b/package.json,
+   track_2b/eslint.config.js and verify.sh.
+
+2. Documentation, designs, text and other non-code materials: Creative Commons Attribution 4.0
+   International (SPDX: CC-BY-4.0), https://creativecommons.org/licenses/by/4.0/
+   This covers README.md, track_2b/README.md, track_2b/technical_report.md and its PDF export,
+   track_2b/docs/ (architecture.md and the architecture.svg design), and this NOTICE.
+   To reuse them, give credit as: Chetan Gupta, Multilingual Review-Reply Triage, Hack Apertus
+   2026, and link the licence.
+
+3. Datasets: Community Data License Agreement, Permissive, Version 2.0 (SPDX:
+   CDLA-Permissive-2.0), https://cdla.dev/permissive-2-0/
+   This covers everything in track_2b/data/: the fictional seed reviews, the offline fixture's
+   canned answers, the labelled evaluation set and the recorded evaluation results. A dataset
+   submitted to Hugging Face alongside this entry is the same data under the same licence.
+   track_2b/data/README.md describes the files and where they came from.
+
+Third-party material is not copied into this repository. Express and its dependencies are
+installed from the npm registry when the Docker image is built (and by `npm ci` for development),
+each under its own licence; the exact versions are pinned in track_2b/package-lock.json. The Docker
+base image (node:24.21.0-bookworm-slim) carries Node.js and Debian packages under their own
+licences. No model weights are included in this repository or in the image.

@@ -1,0 +1,4 @@
+# Shell scripts, Makefiles and the Dockerfile run on Linux and macOS: a CRLF checkout on Windows breaks them.
+*.sh text eol=lf
+Makefile text eol=lf
+Dockerfile text eol=lf

@@ -1,0 +1,88 @@
+{
+  "note": "Canned output of the offline fixture provider. Not produced by any model. Rationales are written in English, the business owner's working language, whatever the review's language.",
+  "byId": {
+    "rev_001": {
+      "language": "de",
+      "category": "complaint",
+      "triageRationale": "Complaint: the guest says the breakfast was \"kalt\" and that \"niemand hat sich gekümmert\"; rating 2/5. Nothing about health or safety.",
+      "reply": "Guten Tag und vielen Dank für Ihre ehrliche Rückmeldung. Es tut uns sehr leid, dass Ihr Frühstück kalt war und dass sich niemand um Sie gekümmert hat. Das entspricht nicht unserem Anspruch. Wir besprechen es heute noch mit dem Team und würden uns freuen, Sie bei Ihrem nächsten Besuch besser zu bewirten.",
+      "draftRationale": "Apologises for the cold breakfast and the missed service, takes ownership without making excuses or promises about compensation, and invites the guest back."
+    },
+    "rev_002": {
+      "language": "fr",
+      "category": "urgent",
+      "triageRationale": "Urgent, health risk: the review reports an allergic reaction (\"allergique aux noix\", \"à l'hôpital\") after staff said the cake had no nuts; rating 1/5.",
+      "reply": "Bonjour, nous sommes sincèrement désolés d'apprendre que votre fille a eu une réaction allergique grave. Nous prenons cette situation très au sérieux et la direction va examiner immédiatement ce qui s'est passé en cuisine et au service. Nous vous invitons à nous contacter directement afin que nous puissions vous répondre personnellement.",
+      "draftRationale": "Shows concern, says the matter is being investigated and moves the conversation out of public view. It makes no claim about cause or fault. The owner should read this one with particular care before anything is published."
+    },
+    "rev_003": {
+      "language": "it",
+      "category": "praise",
+      "triageRationale": "Praise: \"colazione squisita\", \"personale gentilissimo\" and \"torneremo sicuramente\"; rating 5/5.",
+      "reply": "La ringraziamo di cuore per le sue gentili parole! Siamo molto felici che la colazione e la camera le siano piaciute e passeremo il suo complimento a tutto il team. Speriamo di rivederla presto da noi.",
+      "draftRationale": "Warm, short thank-you that names the breakfast and the room the guest mentioned, and invites them back."
+    },
+    "rev_004": {
+      "language": "en",
+      "category": "praise",
+      "triageRationale": "Praise: \"Lovely little café\", \"staff were friendly\" and \"We will be back\"; rating 5/5.",
+      "reply": "Thank you so much for the kind words! We are delighted that you enjoyed the croissants and the view, and we will pass your praise on to the whole team. We look forward to welcoming you back soon.",
+      "draftRationale": "Thanks the guest for the specific things they praised and invites them back. Nothing here needs a decision beyond tone."
+    },
+    "rev_005": {
+      "language": "de",
+      "category": "praise",
+      "triageRationale": "Praise: \"Wunderbarer Aufenthalt\", the room \"sauber\" and hosts who welcomed them \"herzlich\"; rating 5/5.",
+      "reply": "Herzlichen Dank für Ihre freundliche Bewertung! Es freut uns sehr, dass Sie sich bei uns wohlgefühlt haben und dass Ihnen das Zimmer gefallen hat. Wir freuen uns darauf, Sie bald wieder bei uns zu begrüssen.",
+      "draftRationale": "Thanks the guest for the stay, picks up the cleanliness of the room they mentioned, and invites them back."
+    },
+    "rev_006": {
+      "language": "it",
+      "category": "complaint",
+      "triageRationale": "Complaint: the room \"non era stata pulita\", the heating \"non funzionava\" and \"nessuno è venuto\" after asking at reception; rating 2/5.",
+      "reply": "Grazie per la sua segnalazione e ci scusiamo sinceramente per il disagio: la camera avrebbe dovuto essere pulita e il riscaldamento funzionante. Verificheremo con il personale cosa è successo alla reception e faremo in modo che non si ripeta.",
+      "draftRationale": "Apologises for the room and the heating, says the reception handling will be looked into, and does not offer compensation the owner has not agreed to."
+    }
+  },
+  "generic": {
+    "note": "Used for any review that is not one of the seeded ids: language by the shared detector, category from the rating, a stock reply.",
+    "urgentTerms": {
+      "de": ["lebensmittelvergiftung", "allergi", "krankenhaus", "notarzt", "erbrechen", "verletzt"],
+      "fr": ["intoxication", "allergi", "hôpital", "urgences", "vomi", "blessé"],
+      "it": ["intossicazione", "allergi", "ospedale", "pronto soccorso", "vomit", "ferito"],
+      "en": ["food poisoning", "allergic", "allergy", "hospital", "ambulance", "vomit", "injured"]
+    },
+    "triageRationale": {
+      "urgent": "Urgent: the review mentions \"{evidence}\", a possible health or safety problem; rating {rating}/5.",
+      "complaint": "Complaint: the rating is {rating}/5 and no health or safety term appears in the text.",
+      "praise": "Praise: the rating is {rating}/5 and no health or safety term appears in the text."
+    },
+    "draftRationale": {
+      "urgent": "Stock reply for a possible health or safety problem: shows concern and moves the matter out of public view. The owner should read it with care.",
+      "complaint": "Stock reply for a complaint: apologises and says the matter will be looked into.",
+      "praise": "Stock reply for praise: thanks the guest and invites them back."
+    },
+    "replies": {
+      "de": {
+        "praise": "Herzlichen Dank für Ihre freundliche Bewertung! Es freut uns sehr, dass es Ihnen bei uns gefallen hat, und wir freuen uns darauf, Sie bald wieder zu begrüssen.",
+        "complaint": "Vielen Dank für Ihre Rückmeldung. Es tut uns leid, dass wir Ihre Erwartungen nicht erfüllt haben, und wir werden das mit dem Team besprechen.",
+        "urgent": "Vielen Dank für Ihre Nachricht. Es tut uns sehr leid, was Sie erlebt haben, und wir nehmen das sehr ernst. Bitte melden Sie sich direkt bei uns, damit wir der Sache sofort nachgehen können."
+      },
+      "fr": {
+        "praise": "Merci beaucoup pour votre avis! Nous sommes très heureux que votre séjour vous ait plu et nous serons ravis de vous accueillir à nouveau.",
+        "complaint": "Merci pour votre retour. Nous sommes désolés que votre expérience n'ait pas été à la hauteur et nous allons en parler avec toute l'équipe.",
+        "urgent": "Merci pour votre message. Nous sommes sincèrement désolés de ce qui s'est passé et nous prenons cela très au sérieux. Nous vous invitons à nous contacter directement afin d'examiner la situation tout de suite."
+      },
+      "it": {
+        "praise": "Grazie di cuore per la sua recensione! Siamo molto felici che il soggiorno le sia piaciuto e speriamo di rivederla presto da noi.",
+        "complaint": "Grazie per la sua segnalazione. Ci dispiace che l'esperienza non sia stata all'altezza e ne parleremo con tutto il team.",
+        "urgent": "Grazie per il suo messaggio. Siamo sinceramente dispiaciuti per quanto è successo e lo prendiamo molto sul serio. La invitiamo a contattarci direttamente per verificare subito la situazione."
+      },
+      "en": {
+        "praise": "Thank you so much for your kind review! We are delighted that you enjoyed your visit and we look forward to welcoming you back soon.",
+        "complaint": "Thank you for your feedback. We are sorry that your experience did not meet your expectations, and we will talk it through with the team.",
+        "urgent": "Thank you for your message. We are very sorry about what happened and we take it extremely seriously. Please contact us directly so that we can look into it straight away."
+      }
+    }
+  }
+}

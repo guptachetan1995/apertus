@@ -1,0 +1,44 @@
+[
+  {
+    "id": "rev_001",
+    "source": "Guest reviews (fictional seed)",
+    "originalText": "Das Frühstück war kalt und niemand hat sich gekümmert. Wir haben zwanzig Minuten auf den Kaffee gewartet, und als wir uns beschwert haben, wurden wir ignoriert.",
+    "rating": 2,
+    "receivedAt": "2026-10-03T08:12:00Z"
+  },
+  {
+    "id": "rev_002",
+    "source": "Guest reviews (fictional seed)",
+    "originalText": "Ma fille est allergique aux noix. J'ai demandé deux fois si le gâteau en contenait et on m'a répondu que non. Elle a fini à l'hôpital avec une réaction grave. Nous ne reviendrons jamais et je préviendrai tout le monde.",
+    "rating": 1,
+    "receivedAt": "2026-10-03T09:41:00Z"
+  },
+  {
+    "id": "rev_003",
+    "source": "Guest reviews (fictional seed)",
+    "originalText": "Colazione squisita e personale gentilissimo! La camera era pulita e silenziosa, torneremo sicuramente. Grazie di cuore a tutto il team.",
+    "rating": 5,
+    "receivedAt": "2026-10-03T11:05:00Z"
+  },
+  {
+    "id": "rev_004",
+    "source": "Guest reviews (fictional seed)",
+    "originalText": "Lovely little café. The staff were friendly, the croissants were fresh and the view of the mountains is unbeatable. We will be back.",
+    "rating": 5,
+    "receivedAt": "2026-10-04T07:30:00Z"
+  },
+  {
+    "id": "rev_005",
+    "source": "Guest reviews (fictional seed)",
+    "originalText": "Wunderbarer Aufenthalt! Das Zimmer war sauber und die Gastgeber haben uns herzlich empfangen. Wir kommen gerne wieder.",
+    "rating": 5,
+    "receivedAt": "2026-10-04T15:20:00Z"
+  },
+  {
+    "id": "rev_006",
+    "source": "Guest reviews (fictional seed)",
+    "originalText": "La camera non era stata pulita e il riscaldamento non funzionava. Alla reception ci hanno detto di aspettare, ma nessuno è venuto.",
+    "rating": 2,
+    "receivedAt": "2026-10-05T18:02:00Z"
+  }
+]

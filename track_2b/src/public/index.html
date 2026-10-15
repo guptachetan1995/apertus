@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Review reply desk</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Review reply desk</h1>
+      <p class="sub">An agent reads each review and drafts a reply in the guest's own language. Nothing goes public until you approve it.</p>
+    </div>
+    <p id="provider" class="provider" role="status"></p>
+  </header>
+
+  <main>
+    <section id="signin" class="notice" hidden>
+      <h2>Sign in as the owner</h2>
+      <p>This page needs the owner session. Open the single-use link printed in the server log (it looks like <code>/session?token=...</code>), or restart the server to get a new one.</p>
+    </section>
+
+    <section id="desk" hidden>
+      <div class="toolbar">
+        <button id="run-agent" type="button" class="primary">Run the agent: triage and draft</button>
+        <span id="message" class="message" role="status" aria-live="polite"></span>
+      </div>
+
+      <h2 class="visually-hidden">Reviews</h2>
+      <div id="reviews" class="reviews"></div>
+
+      <section class="panel" aria-labelledby="probes-title">
+        <h2 id="probes-title">Gate probes</h2>
+        <p>Make the agent try something it must not be able to do. The refusal below is the real one, from the same chokepoint every call passes through.</p>
+        <div class="probe-buttons">
+          <button id="probe-smuggle" type="button" data-probe="smuggle-status">Agent tries to set replyStatus to published</button>
+          <button id="probe-publish" type="button" data-probe="publish-as-agent">Agent tries to call publish_reply</button>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="log-title">
+        <h2 id="log-title">Activity log</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Time</th><th scope="col">Who</th><th scope="col">Tool</th><th scope="col">Result</th><th scope="col">Details</th></tr>
+            </thead>
+            <tbody id="log"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

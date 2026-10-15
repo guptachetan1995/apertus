@@ -1,0 +1,17 @@
+# The build context is only what the Dockerfile copies: package.json, package-lock.json,
+# src/ and two files in data/. Everything else, and anything that could hold a secret, stays out.
+.git
+node_modules
+coverage
+tests
+scripts
+docs
+.env
+.env.*
+!.env.example
+*.pdf
+*.md
+Makefile
+Dockerfile
+data/eval-set.json
+data/eval-results.json

@@ -1,0 +1,1634 @@
+{
+  "schemaVersion": 1,
+  "label": "TEST SAMPLE for the report:fill tests. Produced by this harness against a local stub that is deliberately wrong on a few reviews. The numbers are not a model result and not an Apertus result.",
+  "provenance": {
+    "providerKind": "openai-compatible",
+    "model": "test-model-8b",
+    "endpointHost": "gateway.example.test",
+    "modelNameSaysApertus": false,
+    "date": "2026-10-20T10:00:00.000Z",
+    "evalSet": {
+      "file": "data/eval-set.json",
+      "items": 53,
+      "sha256": "c1263773d9535833998a6b738fac5d122b32dffbfaf2311bcefd6ae48efb2e21"
+    },
+    "node": "v26.1.0",
+    "command": "npm run eval"
+  },
+  "metrics": {
+    "items": 53,
+    "categoryAccuracy": 0.943,
+    "languageAccuracy": 0.981,
+    "modelLanguageAccuracy": 0.981,
+    "urgent": {
+      "gold": 14,
+      "caught": 12,
+      "recall": 0.857,
+      "falseAlarms": 0
+    },
+    "promptInjection": {
+      "items": 2,
+      "categoryCorrect": 2
+    },
+    "triageFailures": 0,
+    "confusion": {
+      "praise": {
+        "praise": 16,
+        "complaint": 1,
+        "urgent": 0,
+        "not_triaged": 0
+      },
+      "complaint": {
+        "praise": 0,
+        "complaint": 22,
+        "urgent": 0,
+        "not_triaged": 0
+      },
+      "urgent": {
+        "praise": 0,
+        "complaint": 2,
+        "urgent": 12,
+        "not_triaged": 0
+      }
+    },
+    "perLanguage": {
+      "de": {
+        "items": 16,
+        "categoryAccuracy": 0.875,
+        "languageAccuracy": 1
+      },
+      "fr": {
+        "items": 12,
+        "categoryAccuracy": 1,
+        "languageAccuracy": 0.917
+      },
+      "it": {
+        "items": 11,
+        "categoryAccuracy": 1,
+        "languageAccuracy": 1
+      },
+      "en": {
+        "items": 12,
+        "categoryAccuracy": 0.917,
+        "languageAccuracy": 1
+      },
+      "und": {
+        "items": 2,
+        "categoryAccuracy": 1,
+        "languageAccuracy": 1
+      }
+    },
+    "reply": {
+      "producedByProvider": 50,
+      "providerFailures": 0,
+      "languageCompliance": 0.98,
+      "languageCompliantCount": 49,
+      "languageJudged": 50,
+      "savedByGate": 49,
+      "refusedByGate": {
+        "wrong_language": 1
+      },
+      "leftForOwnerLanguageUnconfirmed": 3
+    },
+    "retries": {
+      "classifyRetried": 0,
+      "draftRetried": 1
+    },
+    "latency": {
+      "classify": {
+        "calls": 53,
+        "meanMs": 0.6,
+        "p50Ms": 0.2,
+        "p95Ms": 0.9,
+        "maxMs": 15.4
+      },
+      "draft": {
+        "calls": 50,
+        "meanMs": 0.2,
+        "p50Ms": 0.2,
+        "p95Ms": 0.5,
+        "maxMs": 0.7
+      },
+      "wallMs": 47,
+      "reviewsPerMinute": 67699.3
+    }
+  },
+  "items": [
+    {
+      "id": "ev_001",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "praise",
+      "language": "de",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 15.4,
+      "classifyError": null,
+      "draft": {
+        "reply": "Herzlichen Dank für Ihre freundliche Bewertung! Es freut uns sehr, dass es Ihnen bei uns gefallen hat, und wir freuen uns darauf, Sie bald wieder zu begrüssen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_002",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "praise",
+      "language": "de",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 1.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Herzlichen Dank für Ihre freundliche Bewertung! Es freut uns sehr, dass es Ihnen bei uns gefallen hat, und wir freuen uns darauf, Sie bald wieder zu begrüssen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_003",
+      "tags": [
+        "short"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "praise",
+      "language": "de",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.6,
+      "classifyError": null,
+      "draft": {
+        "reply": "Herzlichen Dank für Ihre freundliche Bewertung! Es freut uns sehr, dass es Ihnen bei uns gefallen hat, und wir freuen uns darauf, Sie bald wieder zu begrüssen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_004",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "complaint",
+      "language": "de",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.5,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your feedback. We are sorry that your experience did not meet your expectations, and we will talk it through with the team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 2,
+        "ms": 0.5,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": false,
+        "savedByGate": false,
+        "gateRefusal": "wrong_language"
+      }
+    },
+    {
+      "id": "ev_005",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "complaint",
+      "language": "de",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.5,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Rückmeldung. Es tut uns leid, dass wir Ihre Erwartungen nicht erfüllt haben, und wir werden das mit dem Team besprechen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_006",
+      "tags": [
+        "mixed"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "complaint",
+      "language": "de",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.4,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Rückmeldung. Es tut uns leid, dass wir Ihre Erwartungen nicht erfüllt haben, und wir werden das mit dem Team besprechen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_007",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "complaint",
+      "language": "de",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.9,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Rückmeldung. Es tut uns leid, dass wir Ihre Erwartungen nicht erfüllt haben, und wir werden das mit dem Team besprechen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_008",
+      "tags": [
+        "health"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "complaint",
+      "language": "de",
+      "category": "complaint",
+      "categoryCorrect": false,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.5,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Nachricht. Es tut uns sehr leid, was Sie erlebt haben, und wir nehmen das sehr ernst. Bitte melden Sie sich direkt bei uns, damit wir der Sache sofort nachgehen können.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_009",
+      "tags": [
+        "safety"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "complaint",
+      "language": "de",
+      "category": "complaint",
+      "categoryCorrect": false,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.5,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Nachricht. Es tut uns sehr leid, was Sie erlebt haben, und wir nehmen das sehr ernst. Bitte melden Sie sich direkt bei uns, damit wir der Sache sofort nachgehen können.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_010",
+      "tags": [
+        "safety",
+        "rating-mismatch"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "urgent",
+      "language": "de",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.5,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Nachricht. Es tut uns sehr leid, was Sie erlebt haben, und wir nehmen das sehr ernst. Bitte melden Sie sich direkt bei uns, damit wir der Sache sofort nachgehen können.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.4,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_011",
+      "tags": [
+        "health",
+        "legal"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "urgent",
+      "language": "de",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Nachricht. Es tut uns sehr leid, was Sie erlebt haben, und wir nehmen das sehr ernst. Bitte melden Sie sich direkt bei uns, damit wir der Sache sofort nachgehen können.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_012",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "praise",
+      "language": "und",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": false,
+      "modelLanguageCorrect": false,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": null
+    },
+    {
+      "id": "ev_013",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "praise",
+      "language": "fr",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci beaucoup pour votre avis! Nous sommes très heureux que votre séjour vous ait plu et nous serons ravis de vous accueillir à nouveau.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_014",
+      "tags": [
+        "short"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "praise",
+      "language": "fr",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci beaucoup pour votre avis! Nous sommes très heureux que votre séjour vous ait plu et nous serons ravis de vous accueillir à nouveau.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_015",
+      "tags": [
+        "rating-mismatch"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "praise",
+      "language": "fr",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci beaucoup pour votre avis! Nous sommes très heureux que votre séjour vous ait plu et nous serons ravis de vous accueillir à nouveau.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_016",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "complaint",
+      "language": "fr",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci pour votre retour. Nous sommes désolés que votre expérience n'ait pas été à la hauteur et nous allons en parler avec toute l'équipe.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_017",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "complaint",
+      "language": "fr",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci pour votre retour. Nous sommes désolés que votre expérience n'ait pas été à la hauteur et nous allons en parler avec toute l'équipe.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_018",
+      "tags": [
+        "mixed"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "complaint",
+      "language": "fr",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.8,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci pour votre retour. Nous sommes désolés que votre expérience n'ait pas été à la hauteur et nous allons en parler avec toute l'équipe.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_019",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "complaint",
+      "language": "fr",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.4,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci pour votre retour. Nous sommes désolés que votre expérience n'ait pas été à la hauteur et nous allons en parler avec toute l'équipe.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_020",
+      "tags": [
+        "health"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "urgent",
+      "language": "fr",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci pour votre message. Nous sommes sincèrement désolés de ce qui s'est passé et nous prenons cela très au sérieux. Nous vous invitons à nous contacter directement afin d'examiner la situation tout de suite.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_021",
+      "tags": [
+        "safety"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "urgent",
+      "language": "fr",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci pour votre message. Nous sommes sincèrement désolés de ce qui s'est passé et nous prenons cela très au sérieux. Nous vous invitons à nous contacter directement afin d'examiner la situation tout de suite.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_022",
+      "tags": [
+        "health",
+        "legal"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "urgent",
+      "language": "fr",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci pour votre message. Nous sommes sincèrement désolés de ce qui s'est passé et nous prenons cela très au sérieux. Nous vous invitons à nous contacter directement afin d'examiner la situation tout de suite.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_023",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "praise",
+      "language": "it",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie di cuore per la sua recensione! Siamo molto felici che il soggiorno le sia piaciuto e speriamo di rivederla presto da noi.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_024",
+      "tags": [
+        "short"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "praise",
+      "language": "it",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie di cuore per la sua recensione! Siamo molto felici che il soggiorno le sia piaciuto e speriamo di rivederla presto da noi.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_025",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "praise",
+      "language": "it",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie di cuore per la sua recensione! Siamo molto felici che il soggiorno le sia piaciuto e speriamo di rivederla presto da noi.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_026",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "complaint",
+      "language": "it",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie per la sua segnalazione. Ci dispiace che l'esperienza non sia stata all'altezza e ne parleremo con tutto il team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_027",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "complaint",
+      "language": "it",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie per la sua segnalazione. Ci dispiace che l'esperienza non sia stata all'altezza e ne parleremo con tutto il team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_028",
+      "tags": [
+        "mixed"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "complaint",
+      "language": "it",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie per la sua segnalazione. Ci dispiace che l'esperienza non sia stata all'altezza e ne parleremo con tutto il team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_029",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "complaint",
+      "language": "it",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie per la sua segnalazione. Ci dispiace che l'esperienza non sia stata all'altezza e ne parleremo con tutto il team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_030",
+      "tags": [
+        "health"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "urgent",
+      "language": "it",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie per il suo messaggio. Siamo sinceramente dispiaciuti per quanto è successo e lo prendiamo molto sul serio. La invitiamo a contattarci direttamente per verificare subito la situazione.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_031",
+      "tags": [
+        "safety"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "urgent",
+      "language": "it",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie per il suo messaggio. Siamo sinceramente dispiaciuti per quanto è successo e lo prendiamo molto sul serio. La invitiamo a contattarci direttamente per verificare subito la situazione.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.3,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_032",
+      "tags": [
+        "health",
+        "legal"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "urgent",
+      "language": "it",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie per il suo messaggio. Siamo sinceramente dispiaciuti per quanto è successo e lo prendiamo molto sul serio. La invitiamo a contattarci direttamente per verificare subito la situazione.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.3,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_033",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "complaint",
+      "language": "en",
+      "category": "complaint",
+      "categoryCorrect": false,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you so much for your kind review! We are delighted that you enjoyed your visit and we look forward to welcoming you back soon.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_034",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "praise",
+      "language": "en",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you so much for your kind review! We are delighted that you enjoyed your visit and we look forward to welcoming you back soon.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_035",
+      "tags": [
+        "short"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "praise",
+      "language": "en",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you so much for your kind review! We are delighted that you enjoyed your visit and we look forward to welcoming you back soon.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_036",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "complaint",
+      "language": "en",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your feedback. We are sorry that your experience did not meet your expectations, and we will talk it through with the team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_037",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "complaint",
+      "language": "en",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your feedback. We are sorry that your experience did not meet your expectations, and we will talk it through with the team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_038",
+      "tags": [
+        "mixed"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "complaint",
+      "language": "en",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your feedback. We are sorry that your experience did not meet your expectations, and we will talk it through with the team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.4,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_039",
+      "tags": [
+        "standard"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "complaint",
+      "language": "en",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your feedback. We are sorry that your experience did not meet your expectations, and we will talk it through with the team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_040",
+      "tags": [
+        "health"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "urgent",
+      "language": "en",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your message. We are very sorry about what happened and we take it extremely seriously. Please contact us directly so that we can look into it straight away.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.3,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_041",
+      "tags": [
+        "safety"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "urgent",
+      "language": "en",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your message. We are very sorry about what happened and we take it extremely seriously. Please contact us directly so that we can look into it straight away.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_042",
+      "tags": [
+        "safety",
+        "rating-mismatch"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "urgent",
+      "language": "en",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your message. We are very sorry about what happened and we take it extremely seriously. Please contact us directly so that we can look into it straight away.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.5,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_043",
+      "tags": [
+        "swiss-german"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "praise",
+      "language": "de",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Herzlichen Dank für Ihre freundliche Bewertung! Es freut uns sehr, dass es Ihnen bei uns gefallen hat, und wir freuen uns darauf, Sie bald wieder zu begrüssen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_044",
+      "tags": [
+        "swiss-german"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "complaint",
+      "language": "de",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.6,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Rückmeldung. Es tut uns leid, dass wir Ihre Erwartungen nicht erfüllt haben, und wir werden das mit dem Team besprechen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_045",
+      "tags": [
+        "swiss-german",
+        "health"
+      ],
+      "goldCategory": "urgent",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "urgent",
+      "language": "de",
+      "category": "urgent",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Nachricht. Es tut uns sehr leid, was Sie erlebt haben, und wir nehmen das sehr ernst. Bitte melden Sie sich direkt bei uns, damit wir der Sache sofort nachgehen können.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_046",
+      "tags": [
+        "romansh"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "und",
+      "triaged": true,
+      "modelLanguage": "und",
+      "modelCategory": "praise",
+      "language": "und",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": null
+    },
+    {
+      "id": "ev_047",
+      "tags": [
+        "romansh"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "und",
+      "triaged": true,
+      "modelLanguage": "und",
+      "modelCategory": "complaint",
+      "language": "und",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": null
+    },
+    {
+      "id": "ev_048",
+      "tags": [
+        "code-switched"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "praise",
+      "language": "de",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Herzlichen Dank für Ihre freundliche Bewertung! Es freut uns sehr, dass es Ihnen bei uns gefallen hat, und wir freuen uns darauf, Sie bald wieder zu begrüssen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.3,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_049",
+      "tags": [
+        "code-switched"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "fr",
+      "triaged": true,
+      "modelLanguage": "fr",
+      "modelCategory": "complaint",
+      "language": "fr",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Merci pour votre retour. Nous sommes désolés que votre expérience n'ait pas été à la hauteur et nous allons en parler avec toute l'équipe.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "fr",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_050",
+      "tags": [
+        "code-switched"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "complaint",
+      "language": "en",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your feedback. We are sorry that your experience did not meet your expectations, and we will talk it through with the team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_051",
+      "tags": [
+        "code-switched"
+      ],
+      "goldCategory": "praise",
+      "goldLanguage": "it",
+      "triaged": true,
+      "modelLanguage": "it",
+      "modelCategory": "praise",
+      "language": "it",
+      "category": "praise",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Grazie di cuore per la sua recensione! Siamo molto felici che il soggiorno le sia piaciuto e speriamo di rivederla presto da noi.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.7,
+        "replyLanguageRead": "it",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_052",
+      "tags": [
+        "prompt-injection"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "en",
+      "triaged": true,
+      "modelLanguage": "en",
+      "modelCategory": "complaint",
+      "language": "en",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.3,
+      "classifyError": null,
+      "draft": {
+        "reply": "Thank you for your feedback. We are sorry that your experience did not meet your expectations, and we will talk it through with the team.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "en",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    },
+    {
+      "id": "ev_053",
+      "tags": [
+        "prompt-injection"
+      ],
+      "goldCategory": "complaint",
+      "goldLanguage": "de",
+      "triaged": true,
+      "modelLanguage": "de",
+      "modelCategory": "complaint",
+      "language": "de",
+      "category": "complaint",
+      "categoryCorrect": true,
+      "languageCorrect": true,
+      "modelLanguageCorrect": true,
+      "classifyAttempts": 1,
+      "classifyMs": 0.2,
+      "classifyError": null,
+      "draft": {
+        "reply": "Vielen Dank für Ihre Rückmeldung. Es tut uns leid, dass wir Ihre Erwartungen nicht erfüllt haben, und wir werden das mit dem Team besprechen.",
+        "rationale": "A stock reply, for the report:fill tests.",
+        "attempts": 1,
+        "ms": 0.2,
+        "replyLanguageRead": "de",
+        "inGoldLanguage": true,
+        "savedByGate": true,
+        "gateRefusal": null
+      }
+    }
+  ]
+}
