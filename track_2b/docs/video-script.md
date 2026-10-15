@@ -1,13 +1,13 @@
 # Demo video script
 
-Source for the narrated demo video (the hackathon asks for at most 2 minutes). Every picture in it
-is the real running app or a real command's output, captured when the video is rendered; nothing
-is a mock-up. The narration is macOS text-to-speech, with no face on screen. The words below are
-the words that are spoken, and the video's subtitles are cut from them.
+The narrated demo video, at most 2 minutes. Every picture in it is the real running app or a real
+command's output, captured when the video is rendered; nothing is a mock-up. The narration is
+text-to-speech, with no face on screen. The words in the shot table are the words that are spoken,
+and the video's subtitles are cut from them.
 
 ## Runtime budget
 
-The limit is 2:00 (120.0 s). The target is 1:45 to 1:55 (105 to 115 s), so that a slower
+The limit is 2:00 (120.0 s). The target is 1:45 to 1:56 (105 to 116 s), so that a slower
 text-to-speech voice cannot push the video past the limit.
 
 | Beat | Seconds |
@@ -22,34 +22,32 @@ text-to-speech voice cannot push the video past the limit.
 | 8 provider | 8.0 |
 | 9 sovereign | 12.0 |
 | 10 evaluation | 12.4 |
-| 11 close | 6.0 |
-| **Total** | **111.2** |
+| 11 close | 10.0 |
+| **Total** | **115.2** |
 
-12.4 + 12.4 + 10.4 + 8.8 + 8.8 + 12.4 + 7.6 + 8.0 + 12.0 + 12.4 + 6.0 = 111.2 s, which is 1:51.2: 8.8 s
-under the limit and inside the target. Each beat is sized from a measured dry run of the voice:
-a beat's narration, spoken one sentence at a time, must end at least 0.3 s before the beat does,
-and starts 0.4 s after it begins (measured speech per beat: 11.0, 11.2, 9.3, 7.7, 7.1, 11.1, 6.2,
-6.9, 10.9, 10.8 and 4.2 s). The render stops if a beat's words do not fit, and stops again if the
-finished file runs over 120.0 s, which `ffprobe` measures. The Apertus cut says more in three beats
-(the table below), so those beats grow to fit; the render refuses a cut that would pass 118 s.
+12.4 + 12.4 + 10.4 + 8.8 + 8.8 + 12.4 + 7.6 + 8.0 + 12.0 + 12.4 + 10.0 = 115.2 s, which is 1:55.2:
+4.8 s under the limit. The voice speaks about 2.9 words a second, so each beat is sized from a
+measured dry run: its narration, spoken one sentence at a time, starts 0.4 s after the beat begins
+and ends at least 0.3 s before it ends. The render stops if a beat's words do not fit, if the shot
+list runs past 118 s, and again if the finished file runs over 120.0 s, which `ffprobe` measures.
+The Apertus cut says more in three beats (the table below), so those beats grow to fit.
 
 ## Two cuts, one script
 
-The video is rendered in one of two modes, and which one is stated in the narration of the cut
-itself.
+The video is rendered in one of two modes, and the narration of the cut says which.
 
 - **Fixture cut.** The app runs with none of `LLM_NAME`, `LLM_BASE_URL` and `LLM_API_KEY` set, so
-  it answers from the offline fixture provider (canned output, no model). The narration says so
-  in the provider beat and no beat shows a result as Apertus output. This is the cut that exists
-  today, because no Apertus endpoint has been run yet.
-- **Apertus cut.** The same script, rendered with the three variables set (by an env file named on
-  the command line, never typed into a shell). The provider beat and the evaluation beat change
-  their words (the table at the end of this file), and a result may be called Apertus's only when
-  the dashboard's own banner shows a model name that says Apertus and an endpoint host.
+  it answers from the offline fixture provider (canned output, no model). The provider beat says
+  so, and no beat shows a result as Apertus output. This is the cut this repository's own results
+  support, because the only evaluation result recorded here is the fixture's.
+- **Apertus cut.** The same script, rendered with the three variables set (from an env file named
+  on the command line, never typed into a shell). The provider, sovereign and evaluation beats
+  change their words (the table further down), and a result is called Apertus's only when the
+  dashboard's own banner shows a model name that says Apertus and an endpoint host.
 
-## Setup
+## How the pictures are captured
 
-Run from `track_2b/` with Node.js 24 or newer:
+From `track_2b/`, with Node.js 24 or newer:
 
 ```bash
 npm ci
@@ -65,9 +63,9 @@ Open the dashboard as the owner (single-use link): http://127.0.0.1:<port>/sessi
 Agent bearer token for external clients: <token>
 ```
 
-For the Apertus cut add `ENV_FILE=<path to a file of the three variables>` to the command. The video
-is recorded from a freshly started server (the activity log is in memory and starts empty), and
-the owner link is single-use, so a recording pass takes a new server.
+For the Apertus cut add `ENV_FILE=<path to a file of the three variables>` to the command. The
+video is recorded from a freshly started server, because the activity log is in memory and starts
+empty, and the owner link works once.
 
 Starting data: the six fictional reviews in `data/seed-reviews.json`, in this order on the
 dashboard before the agent runs: a German complaint (`rev_001`), a French review about an allergic
@@ -95,10 +93,7 @@ what is captured; the last column is the narration, word for word, for the fixtu
 | 8 | `provider` | 1:12 | 8000 | The top of the dashboard with the provider banner outlined: "Offline fixture provider: canned output, not Apertus." | Scroll to the top | This cut ran on the offline fixture provider, and the banner says so. No Apertus result is shown in this video. |
 | 9 | `sovereign` | 1:20 | 12000 | The architecture diagram from `docs/architecture.svg` | None | One container, one model endpoint you choose, nothing else contacted. The declared target is on-premise or air-gapped, with Apertus as the model behind that endpoint. |
 | 10 | `evaluation` | 1:32 | 12400 | The evaluation result from `data/eval-results.json`, its label and provenance line first, as `npm run eval` prints them | None | The evaluation table carries its provenance: model, endpoint host and date. This one reads fixture provider, no endpoint: a baseline, not Apertus. |
-| 11 | `close` | 1:45 | 6000 | A closing card with the repository address and the licences | None | The code is open source under Apache 2.0; the link is in the description. |
-
-The closing card carries the repository address as `REPO_URL` until the render is given the real
-one; a render for upload must be given it.
+| 11 | `close` | 1:45 | 10000 | A closing card with the repository address and the licences | None | Built for Apertus: point it at your server and run the same evaluation. The code is open source under Apache 2.0; the link is in the description. |
 
 ## Wording that changes in the Apertus cut
 
@@ -140,42 +135,33 @@ Every factual statement in the narration, and where the video or the repository 
 | The declared target is on-premise or air-gapped, with Apertus on your own hardware | README "Target architecture" (a declared design; no real Apertus server has been run) |
 | The evaluation table carries model, endpoint host and date | Beat 10 (the provenance line); `scripts/eval.js`, `data/eval-results.json` |
 | This evaluation result is the fixture's, a baseline, not Apertus | Beat 10, read from the file's own label and provenance (provider fake, no endpoint host) |
+| Built for Apertus: pointing the app at a model server gives the evaluation on it | README "Run it against Apertus" and "Evaluation"; `scripts/eval.js` runs the app's own pipeline with whichever endpoint `LLM_*` names; `tests/eval.test.js` (against a stub endpoint, not a real model) |
 | The code is open source under Apache 2.0 | `LICENSE`; README "Licences" |
 
-## Findings from the dry run
-
-Run on 16 Oct 2026 against the real app, before the script was written.
+## What the pictures show
 
 - The seeded urgent review is French (`rev_002`), not German. The German review is a complaint.
-  The script says what the app does.
-- After "Run the agent" the page shows "Triaged 6, drafted 6. Nothing is published." and the
-  urgent card is first.
+- After "Run the agent" the page shows "Triaged 6, drafted 6. Nothing is published." and the urgent
+  card is first.
 - The "Agent tries to call publish_reply" probe answers over `POST /api/probe/...` with HTTP 200 and
   the refusal as its body, so it shows `forbidden_actor` but not the number 403. The 403 comes from
   the same call made as an external agent with a bearer token to `POST /api/invoke`, which is what
   beat 4 shows.
 - A published review moves to the bottom of the list, so beat 6's second picture scrolls to it.
-- The dashboard is taller than one screen; the log is at the bottom, so beats 5 and 7 scroll to it.
-- The banner is at the top of the page, so it is on screen in the frames of beats 1, 2, 3 (first
-  picture), 5 (first picture), 6 (first picture) and 8, and scrolled out of view in the others. The
-  render checks the banner on the page for every dashboard frame, so a frame cannot be captured
-  from a server that is running a different provider than the cut says.
-- The first draft of the narration ran 128 s of speech alone, 8 s over the whole limit. The
-  voice speaks about 2.9 words a second inside a sentence even slowed to 0.9 of its natural speed,
-  so every line was cut to what a beat can hold and the beats were sized from the measurement.
-- Reloading the dashboard after the terminal beat keeps the owner session (it is a cookie) and the
-  server's state, so the drafts are still there; the owner link is not used twice.
-- The first outline on the whole review card was clipped by the card's own edge; it is drawn
-  inside the card.
+- The dashboard is taller than one screen and its log is at the bottom, so beats 5 and 7 scroll to
+  it. The provider banner is at the top of the page: it is on screen in the frames of beats 1, 2,
+  3 (first picture), 5 (first picture), 6 (first picture) and 8, and scrolled out of view in the
+  others. The render checks the banner on the page for every dashboard frame, so a frame cannot
+  come from a server running a different provider than the cut says.
+- The outline on a review card is drawn inside the card, so the card's own edge does not clip it.
 
-## Beats that need the owner
+## Beats with a person on screen
 
-None. The video has no face and no live external call. The owner uploads the rendered file to
-YouTube as Public, with the subtitle file, and pastes the link into the submission.
+None. The video has no face and no live external call.
 
-## Submission checklist (video)
+## Video limits
 
 - Length at most 2:00, checked with `ffprobe`.
 - States plainly, in the video itself, which provider ran.
 - Shows the real running app only.
-- Uploaded as a public YouTube video; link in the submission form.
+- Published as a public video, with the link in the submission form.

@@ -8,7 +8,7 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const { run, checkTeamName, endpointKind, DOCUMENTS } = require('../scripts/report-fill');
+const { run, checkTeamName, endpointKind, readVideoUrl, DOCUMENTS, VIDEO_FILE } = require('../scripts/report-fill');
 const { exportReport, chromePath, MAX_PAGES } = require('../scripts/export-report');
 const { TEAM_NAME } = require('../src/config');
 
@@ -47,8 +47,10 @@ describe('fixture mode (only the offline fixture has a result)', () => {
   });
 
   test('every document says "Not yet run against Apertus", and quotes the fixture\'s numbers', () => {
-    expect(ws.report()).toMatch(/\*\*Not yet run against Apertus\.\*\*/);
     expect(ws.report()).toMatch(/Not yet run against Apertus:\*\* no number in this report was produced by/);
+    expect(ws.report().match(/not yet run against Apertus/gi)).toHaveLength(1);
+    expect(ws.report()).toMatch(/\| Apertus 8B \| Not yet run \|/);
+    expect(ws.report()).toMatch(/Where Apertus fell short: unknown until it is run/);
     expect(ws.readme()).toMatch(/not yet run against Apertus\.\*\*/);
     expect(ws.readme()).toMatch(/Nothing in this repository has been produced by Apertus yet/);
     expect(ws.top()).toMatch(/Nothing in this\s+repository has been produced by Apertus yet/);
@@ -206,6 +208,96 @@ describe('a missing or unknown block is an error, not a silent skip', () => {
     const file = path.join(ws.root, 'README.md');
     fs.writeFileSync(file, `${fs.readFileSync(file, 'utf8')}\n<!-- generated:nonsense:start -->x<!-- generated:nonsense:end -->\n`);
     expect(() => run({ root: ws.root })).toThrow(/unknown generated block "nonsense"/);
+  });
+});
+
+describe('the demo video link (docs/video-url.txt)', () => {
+  const fixtureDoc = JSON.parse(fs.readFileSync(FIXTURE_SAMPLE, 'utf8'));
+  const withVideoFile = (ws, content) => {
+    fs.mkdirSync(path.join(ws.root, 'docs'), { recursive: true });
+    fs.writeFileSync(path.join(ws.root, VIDEO_FILE), content);
+  };
+  const URL_OK = 'https://youtu.be/abc123XYZ_-';
+
+  test('with the file absent every document says "see the submission form", and no placeholder is left', () => {
+    const ws = workspace(fixtureDoc);
+    run({ root: ws.root });
+    expect(ws.report()).toContain('- **Demo video:** <!-- generated:video:start -->see the submission form<!-- generated:video:end -->');
+    expect(ws.readme()).toContain('**Demo video (2 minutes):** <!-- generated:video:start -->see the submission form<!-- generated:video:end -->');
+    expect(ws.top()).toContain('**Demo video (2 minutes):** <!-- generated:video:start -->see the submission form<!-- generated:video:end -->');
+    for (const text of [ws.report(), ws.readme(), ws.top()]) expect(text).not.toMatch(/added at submission|link to be added|TODO|TBD/);
+  });
+
+  test('the committed documents carry no video link until docs/video-url.txt exists', () => {
+    if (fs.existsSync(path.join(ROOT, VIDEO_FILE))) {
+      expect(readVideoUrl(ROOT)).toMatch(/^https:\/\//);
+    } else {
+      expect(readVideoUrl(ROOT)).toBeNull();
+    }
+  });
+
+  test('with the file present the link lands in the report, the README and the repository README', () => {
+    const ws = workspace(fixtureDoc);
+    withVideoFile(ws, `${URL_OK}\n`);
+    expect(run({ root: ws.root }).stale).toEqual(['README.md', 'technical_report.md', '../README.md']);
+    for (const text of [ws.report(), ws.readme(), ws.top()]) {
+      expect(text).toContain(`<!-- generated:video:start --><${URL_OK}><!-- generated:video:end -->`);
+      expect(text).not.toContain('see the submission form');
+    }
+    expect(run({ root: ws.root })).toEqual({ mode: 'fixture', stale: [] });
+    expect(run({ root: ws.root, check: true }).stale).toEqual([]);
+  });
+
+  test('removing the file again puts the sentence back, and --check notices that the documents are stale', () => {
+    const ws = workspace(fixtureDoc);
+    withVideoFile(ws, URL_OK);
+    run({ root: ws.root });
+    fs.rmSync(path.join(ws.root, VIDEO_FILE));
+    expect(run({ root: ws.root, check: true }).stale).toEqual(['README.md', 'technical_report.md', '../README.md']);
+    run({ root: ws.root });
+    expect(ws.report()).toContain('see the submission form');
+  });
+
+  test('a final newline, blank lines after the link and Windows line endings are fine', () => {
+    for (const content of [`${URL_OK}`, `${URL_OK}\n\n\n`, `  ${URL_OK}  \r\n`]) {
+      const ws = workspace(fixtureDoc);
+      withVideoFile(ws, content);
+      expect(readVideoUrl(ws.root)).toBe(URL_OK);
+    }
+  });
+
+  test.each([
+    ['an empty file', ''],
+    ['a blank file', '\n\n'],
+    ['two lines', `${URL_OK}\nhttps://example.test/second\n`],
+    ['text that is not a URL', 'the video is on YouTube'],
+    ['a plain http address', 'http://youtu.be/abc'],
+    ['a URL with spaces', 'https://youtu.be/abc def'],
+    ['a URL with credentials', 'https://someone:secret@youtu.be/abc'],
+    ['another scheme', 'file:///etc/passwd'],
+  ])('%s is refused, naming the file', (_label, content) => {
+    const ws = workspace(fixtureDoc);
+    withVideoFile(ws, content);
+    expect(() => run({ root: ws.root })).toThrow(/docs\/video-url\.txt must hold one line/);
+  });
+
+  test('a refused file leaves the documents untouched', () => {
+    const ws = workspace(fixtureDoc);
+    run({ root: ws.root });
+    const before = ws.raw('technical_report.md');
+    withVideoFile(ws, 'not a url');
+    expect(() => run({ root: ws.root })).toThrow();
+    expect(ws.raw('technical_report.md')).toBe(before);
+  });
+
+  test('the link works in real mode too, and a document that lost the block is an error', () => {
+    const ws = workspace(realSample);
+    withVideoFile(ws, URL_OK);
+    run({ root: ws.root });
+    expect(ws.report()).toContain(`<${URL_OK}>`);
+    const file = path.join(ws.root, 'README.md');
+    fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/<!-- generated:video:start -->[\s\S]*?<!-- generated:video:end -->/, ''));
+    expect(() => run({ root: ws.root })).toThrow(/the generated block "video" is missing/);
   });
 });
 

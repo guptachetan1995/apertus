@@ -1,18 +1,38 @@
 # Multilingual Review-Reply Triage
 
-A public reply to a customer review is the business talking, in its own name, to a stranger, in
-whatever language the review was written in, and it stays visible indefinitely. This project
-treats that as a decision a model does not get to make alone. An agent reads each review in
-German, French, Italian or English, classifies it as praise, a complaint or urgent, and drafts a
-reply in that same language with a rationale in English for the owner. Nothing is posted until
-the owner reads the original, the draft and the rationale side by side and clicks **Approve**.
-Drafting is free; publishing is the one action that is never registered as a tool an agent can
-call.
+## For the jury
 
-Built for [Hack Apertus](https://hackapertus.ch/online-hack), Track 2B (Own Project), for
-[Apertus v1.5](https://huggingface.co/swiss-ai/Apertus-v1.5-8B), Switzerland's open-weight model.
-The whole thing is one container that talks to one model endpoint you choose, so it can run on
-your own hardware with nothing leaving the building.
+**What it is.** An agent reads customer reviews in German, French, Italian and English,
+classifies each as praise, a complaint or urgent, and drafts a public reply in the review's own
+language with a reason in English. Only the owner can publish: `publish_reply` is never
+registered as a tool an agent can call. One container and one model endpoint you choose, built
+for [Apertus v1.5](https://huggingface.co/swiss-ai/Apertus-v1.5-8B) ([Hack
+Apertus](https://hackapertus.ch/online-hack), Track 2B).
+
+**Run it on an Apertus endpoint** (needs `make` and Docker). Put the three settings in a file
+outside the repository and name it:
+
+```bash
+cp .env.example $HOME/apertus.env     # fill in the three empty lines: LLM_NAME, LLM_BASE_URL, LLM_API_KEY
+make run ENV_FILE=$HOME/apertus.env   # from this directory or from the repository root
+```
+
+Open the owner link the log prints and press **Run the agent**; the dashboard banner names the
+model and the endpoint host that answered. The three variables exported in your shell work too.
+On the Public AI Gateway (`LLM_BASE_URL=https://api.publicai.co/v1`) the model ids are
+`swiss-ai/apertus-v1.5-8b` and `swiss-ai/apertus-v1.5-70b`; any OpenAI-compatible server that
+hosts Apertus v1.5 works ("Run it against Apertus" below has the details).
+
+**Get evaluation numbers on your own endpoint.** With Node.js 24 or newer,
+`make eval ENV_FILE=$HOME/apertus.env`; with only Docker,
+`make eval-docker ENV_FILE=$HOME/apertus.env` (the same harness in the pinned Node.js image, result
+in `eval-out/`; not run yet, see "Evaluation"). Either runs the 53-review labelled set through the
+app's own pipeline and records the model, endpoint host and date with the result; `npm run
+report:fill` then brings this README and the technical report in line with it.
+
+**Demo video (2 minutes):** <!-- generated:video:start -->see the submission form<!-- generated:video:end -->
+
+**What this repository's own results are.**
 
 <!-- generated:status:start -->
 **Status: a proof of concept, built and tested, not yet run against Apertus.** The core, the
@@ -23,19 +43,30 @@ fixture's, and its file says so. Every result records the model, endpoint host a
 produced it, and the dashboard says which provider is answering.
 <!-- generated:status:end -->
 
-The Docker image was built and
-run on 15 Oct 2026 (Docker Desktop, Apple silicon) by running the Makefile's own `docker build` and
-`docker run` commands by hand, from a clean copy of the repository, on the offline fixture
-provider: it became healthy and served the whole demo flow as an unprivileged user on a read-only
-filesystem. On 16 Oct 2026 GNU Make 3.81 works on the author's machine: `make -n run` printed the
-expected commands, `make test` (lint and the tests) passed from this directory and from the
-repository root, and **`make run` was run on 16 Oct 2026 from a clean copy (`git archive` of the
-branch) on the fixture provider**: the image built, became healthy as the `node` user on a
-read-only filesystem with every capability dropped, and served the demo flow over HTTP on
-127.0.0.1 (owner link, run the agent, publish by the owner, the agent's publish refused as
-`forbidden_actor`, a forged owner refused as `forged_actor`). A second `make run` with
-`LLM_BASE_URL=http://localhost:<port>/v1` pointing at a stub model server on the host logged the
-rewrite to `host.docker.internal` and got all 6 reviews triaged and drafted from the stub.
+## The problem and the approach
+
+A public reply to a customer review is the business talking, in its own name, to a stranger, in
+whatever language the review was written in, and it stays visible indefinitely. This project
+treats that as a decision a model does not get to make alone. An agent reads each review in
+German, French, Italian or English, classifies it as praise, a complaint or urgent, and drafts a
+reply in that same language with a rationale in English for the owner. Nothing is posted until
+the owner reads the original, the draft and the rationale side by side and clicks **Approve**.
+Drafting is free; publishing is the one action that is never registered as a tool an agent can
+call. The whole thing is one container that talks to one model endpoint you choose, so it can run
+on your own hardware with nothing leaving the building.
+
+## What was run, when, on what
+
+All runs were on the author's Mac (Docker Desktop, Apple silicon).
+
+| When | What was run | On what | Result |
+|---|---|---|---|
+| 15 Oct 2026 | The Makefile's own `docker build` and `docker run` commands, by hand, from a clean copy of the repository | Offline fixture provider | Image built and healthy; unprivileged user, read-only filesystem; the whole demo flow served over HTTP |
+| 16 Oct 2026 | `make -n run`, and `make test` (lint and the tests) from this directory and from the repository root | GNU Make 3.81 | `make -n run` printed the expected commands; lint and the tests passed |
+| 16 Oct 2026 | `make run` from a clean copy (`git archive` of the branch) | Offline fixture provider | Image built, healthy as the `node` user on a read-only filesystem with every capability dropped; owner link, run the agent, publish by the owner, the agent's publish refused as `forbidden_actor`, a forged owner refused as `forged_actor` |
+| 16 Oct 2026 | `make run` with `LLM_BASE_URL=http://localhost:<port>/v1` | A stub model server on the host, not a model | The log showed the rewrite to `host.docker.internal`; all 6 reviews triaged and drafted from the stub |
+| 16 Oct 2026 | `make run` from a fresh clone of the public repository | Offline fixture provider, port 3100 | Image built and healthy |
+| Not run | Linux; Windows; `make run` with a real Apertus endpoint; `make eval-docker` | | |
 
 ## Quick start
 
@@ -65,11 +96,11 @@ Two things to know when you point it at a model:
 - **A model server on the same machine.** Inside the container `localhost` is the container
   itself. If `LLM_BASE_URL` names `localhost`, `127.0.0.1` or `[::1]`, the server notices it is in
   a container (the image sets `APERTUS_IN_CONTAINER=1`), uses `host.docker.internal` (which `make
-  run` maps to the host) in its place and prints one startup line saying so. On Docker Desktop for
-  Mac (Apple silicon, 16 Oct 2026) this reached a stub server on the host that listened only on
-  `127.0.0.1`. On Linux a host server bound only to `127.0.0.1` is not reachable from a
-  container (not run here): make it listen on `0.0.0.0`; the error text says so. Outside Docker
-  (`npm start`) nothing is rewritten.
+  run` maps to the host) in its place and prints one startup line saying so. Docker Desktop for Mac
+  reached a stub server on the host that listened only on `127.0.0.1` this way (see the table
+  above). On Linux a host server bound only to `127.0.0.1` is not reachable from a container: make
+  it listen on `0.0.0.0`; the error text says so. Outside Docker (`npm start`) nothing is
+  rewritten.
 - **Slow hardware.** `LLM_TIMEOUT_MS` defaults to 60000 (60 s per request, one retry). An 8B model
   on a CPU can need longer, so set for example `LLM_TIMEOUT_MS=300000`.
 
@@ -164,9 +195,8 @@ Where the key comes from is up to you; the code treats all of them the same:
   server; the instructions are the project's, not tested here. The weights are gated on Hugging
   Face (see the technical report), so an account with access is needed on the model host.
   If the server runs on the same machine as `make run`, use `http://host.docker.internal:8000/v1`
-  or just `http://localhost:8000/v1` (see Quick start). The address rewrite is covered by tests and
-  was run in the container against a stub on the host; no real model server has been reached from
-  the container.
+  or just `http://localhost:8000/v1` (see Quick start). The address rewrite is covered by tests;
+  the table above says what has been run.
 
 Keep the key out of the shell history and out of this directory: put the three lines in a file
 outside the repository (a copy of `.env.example`, one `KEY=value` per line, no quotes) and name it:
@@ -229,6 +259,7 @@ npm run eval                                    # the fixture, or whichever endp
 ENV_FILE=$HOME/apertus.env npm run eval         # a real endpoint, key read from the file
 npm run eval -- --limit 5 --out /tmp/try.json   # a quick smoke run that leaves the committed result alone
 make eval ENV_FILE=$HOME/apertus.env            # the same, through make
+make eval-docker ENV_FILE=$HOME/apertus.env     # Docker only, no Node.js; the result lands in ./eval-out/ (not run here)
 ```
 
 The harness runs the app's own pipeline (triage, then draft, through `invoke()` as the agent) over
@@ -239,6 +270,18 @@ language accuracy, reply-language compliance (as read by the server's own check)
 call, and writes `data/eval-results.json` with provenance: provider kind, model name, endpoint
 host, date, and the SHA-256 of the evaluation set. A fixture run will not overwrite a result that
 came from a real endpoint.
+
+**`make eval-docker` (not run here).** For a machine with Docker and `make` but not Node.js 24. It
+runs `scripts/eval.js` in the image the Dockerfile pins (read from the Dockerfile, so the digest is
+the same), with the checkout mounted read-only at `/app`, as your own user, with every capability
+dropped. `LLM_NAME`, `LLM_BASE_URL`, `LLM_API_KEY` and `LLM_TIMEOUT_MS` are passed by name, never as
+values, and `ENV_FILE` works as for `make run`; a loopback `LLM_BASE_URL` is pointed at
+`host.docker.internal` by the same code as the app's. Because the checkout is read-only the result
+goes to `EVAL_OUT` (default `./eval-out`, ignored by git): move it to `data/eval-results.json` (8B)
+or `data/eval-results-70b.json`, and run `npm run report:fill` (that step needs Node.js). The recipe
+has not been run, because that needs Docker and an endpoint key; the tests check it (the pinned
+image, the read-only mount, no value on the command line) and that the harness runs from a
+read-only copy of the checkout with no `node_modules`.
 
 <!-- generated:evaluation-note:start -->
 The committed `data/eval-results.json` is the fixture's. It is labelled as not an Apertus result,
@@ -275,9 +318,7 @@ allowed to; this repository's data is fictional.
 - Nothing in this repository has been produced by Apertus yet. The client is tested against a
   local stub server, and the evaluation harness is ready to run against a real endpoint.
 <!-- generated:limits:end -->
-- `make run` was run once, on 16 Oct 2026 from a clean copy, on the fixture provider and against a
-  stub model server on the host (see Status). It has not been run with a real Apertus endpoint, or
-  on Linux or Windows.
+- The container path was exercised only as the table "What was run, when, on what" shows.
 - **Reviews come only from the seed file, and nothing is posted to any platform.** The six
   reviews are read from `data/seed-reviews.json` at start-up; no review is fetched from Google,
   Tripadvisor, Booking.com or any other platform. "Publish" flips an in-memory status to
@@ -301,6 +342,7 @@ allowed to; this repository's data is fictional.
 npm ci               # install from the lockfile
 npm test             # Jest, including the packaging tests (no Docker needed)
 npm run lint         # ESLint
+npm run mutation-check  # removes ten gate checks one at a time from a copy; the suite must fail each time (about 25 s)
 npm run eval         # evaluation harness (see above)
 npm run report:fill  # after a new eval run or a TEAM_NAME change: rewrite the generated parts of the README and report
 npm run report:pdf   # technical_report.md -> the report PDF, at most 6 pages
@@ -308,12 +350,12 @@ npm run report:pdf   # technical_report.md -> the report PDF, at most 6 pages
 make test            # lint and tests through make
 ```
 
-`make` is used for `run`, `build`, `test` and `eval`; the commands above need Node.js 24 or newer
+`make` is used for `run`, `build`, `test`, `eval` and `eval-docker`; the commands above need Node.js 24 or newer
 (and an installed Chrome for `report:pdf` only). Report PDF for submission: <!-- generated:team-pdf:start -->`ChetanGupta_Report.pdf`<!-- generated:team-pdf:end --> in this directory. The team name ("Chetan Gupta") is the one constant `TEAM_NAME` in `src/config.js`, in the file-safe form without a space; to change it, change that line and run `npm run report:fill`, which copies it into this README and the report.
 
 ```
 Dockerfile, .dockerignore   the image: pinned base, non-root, health check, no secrets
-Makefile                    run, build, test, eval
+Makefile                    run, build, test, eval, eval-docker
 src/
   server.js                 Express app: dashboard, POST /api/invoke, owner and agent identities
   invoke.js                 invoke(tool, args, actor): the one door
@@ -328,7 +370,7 @@ src/
   providers/                the model adapter: the offline fixture provider and the
                             OpenAI-compatible client
   public/                   the dashboard (plain HTML, CSS and JS, no build step)
-scripts/                    eval.js, report-fill.js, export-report.js, preflight.sh (used by make run)
+scripts/                    eval.js, report-fill.js, export-report.js, mutation-check.js, preflight.sh (used by make run)
 data/                       fictional seed reviews, the fixture's canned output, the labelled
                             evaluation set and its results (README.md describes them)
 docs/                       architecture.md and architecture.svg
@@ -342,4 +384,6 @@ technical_report.md         the write-up for the jury
 Code: [Apache-2.0](../LICENSE). Documentation, designs and text: CC-BY-4.0. Datasets (`data/`):
 CDLA-Permissive-2.0, which is what the hackathon's terms assign to submitted datasets. Copyright
 (c) 2026 Chetan Gupta; [`../NOTICE`](../NOTICE) says which part of the repository falls under
-which licence. The seed reviews are fictional.
+which licence. The full texts are [`../LICENSE`](../LICENSE) (Apache-2.0),
+[`../LICENSES/CC-BY-4.0.txt`](../LICENSES/CC-BY-4.0.txt) and [`data/LICENSE`](data/LICENSE)
+(CDLA-Permissive-2.0). The seed reviews are fictional.

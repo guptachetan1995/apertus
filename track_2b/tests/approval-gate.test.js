@@ -173,6 +173,18 @@ describe('what the owner can do, one review at a time', () => {
 });
 
 describe('defence in depth', () => {
+  test('invoke() itself refuses an agent before an owner verb is reached: the handler is never called', async () => {
+    const { store, provider } = harness();
+    const reached = [];
+    const spy = (name) => ({ ...ownerVerbs[name], async handler(args) { reached.push(name); return { result: { id: args.id }, summary: name }; } });
+    const { invoke } = createInvoke({ store, provider, verbs: { publish_reply: spy('publish_reply'), reject_reply: spy('reject_reply') } });
+    expect(await invoke('publish_reply', { id: 'rev_001' }, 'agent')).toMatchObject({ ok: false, error: { code: 'forbidden_actor' } });
+    expect(await invoke('reject_reply', { id: 'rev_001', reason: 'not mine to reject' }, 'agent')).toMatchObject({ ok: false, error: { code: 'forbidden_actor' } });
+    expect(reached).toEqual([]);
+    expect(await invoke('publish_reply', { id: 'rev_001' }, 'owner')).toMatchObject({ ok: true });
+    expect(reached).toEqual(['publish_reply']);
+  });
+
   test('each owner verb checks the actor itself, even if invoke() were to hand it to the wrong one', async () => {
     const { store } = harness();
     await expect(ownerVerbs.publish_reply.handler({ id: 'rev_001' }, { store, actor: 'agent' })).rejects.toMatchObject({ code: 'forbidden_actor' });

@@ -6,11 +6,13 @@ The whole directory is far below the organisers' 100 MB limit.
 
 **Licence: Community Data License Agreement, Permissive, Version 2.0 (CDLA-Permissive-2.0),**
 <https://cdla.dev/permissive-2-0/>. This is the licence Section 6 of the Hack Apertus Terms and
-Conditions assigns to submitted datasets. Copyright (c) 2026 Chetan Gupta. (Code is Apache-2.0
-and documentation is CC-BY-4.0; see `../../NOTICE`.)
+Conditions assigns to submitted datasets; the full agreement is in [`LICENSE`](LICENSE) in this
+directory. Copyright (c) 2026 Chetan Gupta. (Code is Apache-2.0 and documentation is CC-BY-4.0;
+see `../../NOTICE`.)
 
 | File | What it is | Used by |
 |---|---|---|
+| `LICENSE` | The CDLA-Permissive-2.0 agreement text | nothing; it is the licence of the files below |
 | `seed-reviews.json` | Six fictional reviews (German, French, Italian, English) the dashboard starts with | the app, in the image |
 | `fake-provider-fixtures.json` | The offline fixture provider's canned classifications and replies. Not produced by any model | the app when no endpoint is configured, in the image |
 | `eval-set.json` | 53 labelled fictional reviews: `originalText`, `rating`, `goldCategory` (`praise`, `complaint`, `urgent`), `goldLanguage` (`de`, `fr`, `it`, `en`, `und`) and `tags`. The labelling rules are in the file's `note` | `npm run eval` (not in the image) |

@@ -16,7 +16,8 @@
     "eval": "node scripts/eval.js",
     "report:fill": "node scripts/report-fill.js",
     "report:check": "node scripts/report-fill.js --check",
-    "report:pdf": "node scripts/export-report.js"
+    "report:pdf": "node scripts/export-report.js",
+    "mutation-check": "node scripts/mutation-check.js"
   },
   "dependencies": {
     "express": "^5.2.1"

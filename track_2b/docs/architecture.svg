@@ -21,7 +21,7 @@
   <text x="373" y="88" text-anchor="middle">Express: who is calling comes from the credential</text>
   <rect x="230" y="116" width="286" height="40" rx="4" fill="#fff6dd" stroke="#a07800" stroke-width="2"/>
   <text x="373" y="134" text-anchor="middle" font-weight="bold">invoke(tool, args, actor)</text>
-  <text x="373" y="149" text-anchor="middle" font-size="11">the one chokepoint: every call, allowed or refused, is logged</text>
+  <text x="373" y="149" text-anchor="middle" font-size="11">the one chokepoint: all calls logged, even refused</text>
   <rect x="230" y="176" width="138" height="48" rx="4" fill="#fde9e7" stroke="#a33a2f" stroke-width="2"/>
   <text x="299" y="196" text-anchor="middle">Owner verbs</text>
   <text x="299" y="212" text-anchor="middle" font-size="11">publish, reject: owner only</text>

@@ -15,3 +15,4 @@ Makefile
 Dockerfile
 data/eval-set.json
 data/eval-results.json
+eval-out

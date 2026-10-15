@@ -76,8 +76,8 @@ describe('.gitattributes', () => {
 describe('.dockerignore', () => {
   const ignored = read('.dockerignore').split('\n').map((line) => line.trim());
 
-  test('keeps env files, tests and documents out of the build context', () => {
-    for (const entry of ['.env', '.env.*', '!.env.example', 'tests', 'node_modules', '.git']) {
+  test('keeps env files, tests, documents and evaluation output out of the build context', () => {
+    for (const entry of ['.env', '.env.*', '!.env.example', 'tests', 'node_modules', '.git', 'eval-out']) {
       expect(ignored).toContain(entry);
     }
   });
@@ -86,8 +86,8 @@ describe('.dockerignore', () => {
 describe('Makefile', () => {
   test('uses tabs for recipes and declares the targets the documents name', () => {
     expect(MAKEFILE).not.toMatch(/^ +[^ #]/m);
-    expect(MAKEFILE).toMatch(/^\.PHONY:.*\brun\b.*\bbuild\b.*\btest\b.*\beval\b/m);
-    for (const target of ['run', 'build', 'test', 'eval']) expect(MAKEFILE).toMatch(new RegExp(`^${target}:`, 'm'));
+    expect(MAKEFILE).toMatch(/^\.PHONY:.*\brun\b.*\bbuild\b.*\btest\b.*\beval\b.*\beval-docker\b/m);
+    for (const target of ['run', 'build', 'test', 'eval', 'eval-docker']) expect(MAKEFILE).toMatch(new RegExp(`^${target}:`, 'm'));
   });
 
   test('make run builds, then starts the container, passing the three settings by name', () => {
@@ -104,11 +104,98 @@ describe('Makefile', () => {
     expect(MAKEFILE).not.toMatch(/LLM_[A-Z_]+=/);
   });
 
-  test('the root Makefile forwards the same targets to track_2b', () => {
+  test('the root Makefile forwards the same targets to track_2b, with ENV_FILE and EVAL_OUT made absolute', () => {
     const rootMakefile = fs.readFileSync(path.join(ROOT, '..', 'Makefile'), 'utf8');
-    expect(rootMakefile).toMatch(/^\.PHONY:.*\brun\b.*\bbuild\b.*\btest\b.*\beval\b/m);
-    expect(rootMakefile).toMatch(/^run build test eval:/m);
+    expect(rootMakefile).toMatch(/^\.PHONY:.*\brun\b.*\bbuild\b.*\btest\b.*\beval\b.*\beval-docker\b/m);
+    expect(rootMakefile).toMatch(/^run build test eval eval-docker:/m);
     expect(rootMakefile).toMatch(/-C track_2b \$@/);
+    expect(rootMakefile).toMatch(/ENV_FILE=\$\(abspath \$\(ENV_FILE\)\)/);
+    expect(rootMakefile).toMatch(/EVAL_OUT=\$\(abspath \$\(EVAL_OUT\)\)/);
+  });
+});
+
+describe('make eval-docker (the evaluation in the pinned Node.js image; Docker itself is not run here)', () => {
+  const recipe = MAKEFILE.slice(MAKEFILE.indexOf('\neval-docker:')).replace(/\\\n/g, ' ');
+  const dockerFrom = dockerfileLines().find((line) => line.startsWith('FROM ')).slice('FROM '.length);
+
+  test('uses the image the Dockerfile pins, read from the Dockerfile so the two cannot drift', () => {
+    expect(MAKEFILE).toMatch(/^NODE_IMAGE := \$\(shell sed -n 's\/\^FROM \/\/p' Dockerfile\)$/m);
+    expect(recipe).toContain('$(NODE_IMAGE) node scripts/eval.js');
+    expect(dockerFrom).toMatch(/^node:24\.\d+\.\d+-bookworm-slim@sha256:[0-9a-f]{64}$/);
+    expect(recipe).not.toMatch(/sha256:/);
+  });
+
+  test('mounts the checkout read-only and one writable output folder, nothing else', () => {
+    const mounts = [...recipe.matchAll(/-v "([^"]+)"/g)].map((m) => m[1]);
+    expect(mounts).toEqual(['$(CURDIR):/app:ro', '$(abspath $(EVAL_OUT)):/out']);
+    expect(recipe).toContain('--out /out/eval-results.json');
+    expect(MAKEFILE).toMatch(/^EVAL_OUT \?= eval-out$/m);
+  });
+
+  test('runs locked down, as the invoking user, with the host reachable as host.docker.internal', () => {
+    for (const flag of ['--rm', '--init', '--read-only', '--cap-drop ALL', '--security-opt no-new-privileges', '--add-host host.docker.internal:host-gateway', '-e APERTUS_IN_CONTAINER=1']) {
+      expect(recipe).toContain(flag);
+    }
+    expect(recipe).toContain('--user "$(shell id -u):$(shell id -g)"');
+    expect(recipe.slice(recipe.indexOf('docker run'))).not.toMatch(/--privileged|--network|--publish| -p /);
+  });
+
+  test('passes the three settings and the timeout by name, ENV_FILE by file, and never expands a value', () => {
+    for (const name of ['LLM_NAME', 'LLM_BASE_URL', 'LLM_API_KEY', 'LLM_TIMEOUT_MS']) expect(recipe).toMatch(new RegExp(`-e ${name}(\\s|$)`));
+    expect(recipe).toContain('$(if $(ENV_FILE),--env-file $(ENV_FILE))');
+    expect(recipe).not.toMatch(/\$\((LLM_[A-Z_]+|OWNER_TOKEN|AGENT_TOKEN)\)|LLM_[A-Z_]+=/);
+    expect(recipe).toContain('scripts/preflight.sh check "$(ENV_FILE)" "make eval-docker"');
+  });
+
+  const make = spawnSync('make', ['--version'], { encoding: 'utf8' });
+  const maybe = make.status === 0 ? test : test.skip;
+  maybe('make -n prints the command with the pinned image and no secret value', () => {
+    const KEY = 'eval-docker-fake-key-0123456789';
+    const dry = spawnSync('make', ['-n', 'eval-docker', 'EVAL_OUT=/tmp/eval-out-for-test', 'EVAL_ARGS=--limit 5'], {
+      cwd: ROOT,
+      env: { PATH: process.env.PATH, LLM_NAME: 'swiss-ai/apertus-v1.5-8b', LLM_BASE_URL: 'https://example.invalid/v1', LLM_API_KEY: KEY },
+      encoding: 'utf8',
+    });
+    expect(dry.status).toBe(0);
+    expect(dry.stdout).toContain(`${dockerFrom} node scripts/eval.js --out /out/eval-results.json --limit 5`);
+    expect(dry.stdout).toContain(`-v "${ROOT}:/app:ro" -v "/tmp/eval-out-for-test:/out"`);
+    expect(dry.stdout).toMatch(/-e LLM_NAME -e LLM_BASE_URL -e LLM_API_KEY -e LLM_TIMEOUT_MS/);
+    expect(dry.stdout + dry.stderr).not.toContain(KEY);
+    expect(dry.stdout + dry.stderr).not.toContain('example.invalid');
+  });
+
+  test('the checkout alone, read-only and without node_modules, is enough to run the evaluation', () => {
+    const work = fs.mkdtempSync(path.join(os.tmpdir(), 'review-triage-eval-docker-'));
+    const app = path.join(work, 'app');
+    const out = path.join(work, 'out');
+    const walk = (dir, visit) => {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) walk(full, visit);
+        visit(full, entry.isDirectory());
+      }
+    };
+    try {
+      for (const name of ['src', 'scripts', 'data']) fs.cpSync(path.join(ROOT, name), path.join(app, name), { recursive: true });
+      fs.mkdirSync(out);
+      walk(app, (full, isDir) => fs.chmodSync(full, isDir ? 0o555 : 0o444));
+      fs.chmodSync(app, 0o555);
+      const run = spawnSync(process.execPath, ['scripts/eval.js', '--fake', '--out', path.join(out, 'eval-results.json')], {
+        cwd: app,
+        env: { PATH: process.env.PATH },
+        encoding: 'utf8',
+      });
+      expect(run.stderr).toBe('');
+      expect(run.status).toBe(0);
+      expect(run.stdout).toContain(`wrote ${path.join(out, 'eval-results.json')}`);
+      const written = JSON.parse(fs.readFileSync(path.join(out, 'eval-results.json'), 'utf8'));
+      expect(written.provenance).toMatchObject({ providerKind: 'fake' });
+      expect(fs.readdirSync(app).sort()).toEqual(['data', 'scripts', 'src']);
+    } finally {
+      fs.chmodSync(app, 0o755);
+      walk(app, (full, isDir) => fs.chmodSync(full, isDir ? 0o755 : 0o644));
+      fs.rmSync(work, { recursive: true, force: true });
+    }
   });
 });
 
@@ -160,6 +247,18 @@ describe('scripts/preflight.sh', () => {
 
   test('an unknown mode is a usage error', () => {
     expect(preflight('nonsense').status).toBe(64);
+  });
+
+  test('names the make target that called it, make run by default', () => {
+    const half = { LLM_API_KEY: KEY };
+    expect(preflight('check', { env: half }).err).toMatch(/^make run: /);
+    const run = spawnSync('sh', [path.join(ROOT, 'scripts', 'preflight.sh'), 'check', '', 'make eval-docker'], { env: { PATH: process.env.PATH, ...half }, encoding: 'utf8' });
+    expect(run.status).toBe(2);
+    expect(run.stderr).toMatch(/^make eval-docker: /);
+    const banner = spawnSync('sh', [path.join(ROOT, 'scripts', 'preflight.sh'), 'banner', '', 'make eval-docker'], { env: { PATH: process.env.PATH }, encoding: 'utf8' });
+    expect(banner.stdout).toMatch(/OFFLINE FIXTURE PROVIDER/);
+    expect(banner.stdout).toContain('or: make eval-docker ENV_FILE=.env');
+    expect(banner.stdout).not.toContain('make run');
   });
 });
 

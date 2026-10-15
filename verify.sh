@@ -46,10 +46,10 @@ data_kb="$(du -sk "$P/data" | cut -f1)"
 echo "  ok: ${data_kb} KB"
 
 echo "== make run: the Makefile's run target builds the image and starts the container =="
-for target in run build test eval; do
+for target in run build test eval eval-docker; do
   grep -qE "^\.PHONY:.*[[:space:]]$target([[:space:]]|\$)" "$P/Makefile" || fail "$P/Makefile does not declare $target as .PHONY"
   grep -q "^$target:" "$P/Makefile" || fail "$P/Makefile has no $target target"
-  grep -qE "^(run build test eval|$target):" Makefile || fail "the root Makefile does not forward $target to $P"
+  grep -qE "^(run build test eval eval-docker|$target):" Makefile || fail "the root Makefile does not forward $target to $P"
 done
 grep -q 'docker run' "$P/Makefile" || fail "$P/Makefile's run target does not use docker run"
 grep -q 'docker build' "$P/Makefile" || fail "$P/Makefile does not build the image"
@@ -57,6 +57,8 @@ if grep -nE '^ +[^ #]' Makefile "$P/Makefile" | grep -v ':[0-9]*:#'; then
   fail "a Makefile has a line indented with spaces; make recipes need a tab"
 fi
 grep -q -- '-C track_2b' Makefile || fail "the root Makefile does not run the targets in $P"
+grep -qE -- '-v "\$\(CURDIR\):/app:ro"' "$P/Makefile" || fail "make eval-docker must mount the checkout read-only"
+grep -q 'NODE_IMAGE' "$P/Makefile" || fail "make eval-docker must use the image the Dockerfile pins"
 echo "  ok"
 
 echo "== the Makefile never puts a secret on a command line, and the preflight script is sound =="
@@ -111,6 +113,14 @@ grep -q 'Apache License' LICENSE && grep -q 'Version 2.0, January 2004' LICENSE 
 grep -q 'Copyright (c) 2026 Chetan Gupta' LICENSE || fail "LICENSE does not name the copyright holder as 'Copyright (c) 2026 Chetan Gupta'"
 grep -q '"license": "Apache-2.0"' "$P/package.json" || fail "package.json does not declare Apache-2.0"
 for term in Apache-2.0 CC-BY-4.0 CDLA-Permissive-2.0 'Chetan Gupta'; do
+  grep -qF "$term" NOTICE || fail "NOTICE does not mention $term"
+done
+# The licence texts themselves, not only their names (NOTICE records where each was read).
+[ -f LICENSES/CC-BY-4.0.txt ] && grep -q 'Creative Commons Attribution 4.0 International Public License' LICENSES/CC-BY-4.0.txt &&
+  grep -q 'Section 6 -- Term and Termination' LICENSES/CC-BY-4.0.txt || fail "LICENSES/CC-BY-4.0.txt is missing or is not the CC BY 4.0 legal code"
+[ -f "$P/data/LICENSE" ] && grep -q 'Community Data License Agreement' "$P/data/LICENSE" && grep -q 'Permissive' "$P/data/LICENSE" &&
+  grep -q 'Version 2.0' "$P/data/LICENSE" && grep -q '5.4. ' "$P/data/LICENSE" || fail "$P/data/LICENSE is missing or is not the CDLA-Permissive-2.0 text"
+for term in LICENSES/CC-BY-4.0.txt track_2b/data/LICENSE creativecommons.org/licenses/by/4.0/legalcode.txt cdla.dev/permissive-2-0 'read 16 Oct 2026'; do
   grep -qF "$term" NOTICE || fail "NOTICE does not mention $term"
 done
 grep -q 'CDLA-Permissive-2.0' "$P/data/README.md" || fail "$P/data/README.md does not state the dataset licence, CDLA-Permissive-2.0"

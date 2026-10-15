@@ -18,6 +18,9 @@ read 7 Oct 2026).
    track_2b/docs/ (architecture.md and the architecture.svg design), and this NOTICE.
    To reuse them, give credit as: Chetan Gupta, Multilingual Review-Reply Triage, Hack Apertus
    2026, and link the licence.
+   The full legal code is in LICENSES/CC-BY-4.0.txt: the plain-text legal code that
+   https://creativecommons.org/licenses/by/4.0/legalcode.txt serves, read 16 Oct 2026 and copied
+   without change.
 
 3. Datasets: Community Data License Agreement, Permissive, Version 2.0 (SPDX:
    CDLA-Permissive-2.0), https://cdla.dev/permissive-2-0/
@@ -25,6 +28,10 @@ read 7 Oct 2026).
    canned answers, the labelled evaluation set and the recorded evaluation results. A dataset
    submitted to Hugging Face alongside this entry is the same data under the same licence.
    track_2b/data/README.md describes the files and where they came from.
+   The full agreement is in track_2b/data/LICENSE: the text on https://cdla.dev/permissive-2-0/
+   (the Linux Foundation's page for the licence), read 16 Oct 2026 and copied without change,
+   typographic dashes and quotes included. It has the same wording as the SPDX list's text for
+   CDLA-Permissive-2.0.
 
 Third-party material is not copied into this repository. Express and its dependencies are
 installed from the npm registry when the Docker image is built (and by `npm ci` for development),

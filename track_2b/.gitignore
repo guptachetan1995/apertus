@@ -28,3 +28,6 @@ build/
 
 # Test output
 coverage/
+
+# Output of make eval-docker
+eval-out/

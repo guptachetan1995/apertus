@@ -14,6 +14,9 @@
 //
 // A document is found relative to --root (the track directory, default: this one): its own
 // README.md and technical_report.md, and the repository README.md one level up.
+//
+// The demo video's link is not known until it is uploaded. docs/video-url.txt (optional, one line,
+// an https URL) holds it; with the file absent the documents say "see the submission form".
 
 const crypto = require('node:crypto');
 const fs = require('node:fs');
@@ -25,16 +28,18 @@ const MARKER = /<!-- generated:([a-z0-9-]+):start -->([\s\S]*?)<!-- generated:\1
 const TEAM_FORMAT = /^[A-Za-z0-9][A-Za-z0-9_-]*$/;
 const KNOWN_GATEWAYS = { 'api.publicai.co': 'Public AI Gateway' };
 const LIST_CAP = 8;
+const VIDEO_FILE = path.join('docs', 'video-url.txt');
+const NO_VIDEO_YET = 'see the submission form';
 
 // What each document must carry. A missing block is an error, so a rewritten paragraph cannot
 // quietly stop being kept up to date.
 const DOCUMENTS = [
-  { file: 'README.md', blocks: ['status', 'limits', 'evaluation-note', 'team-pdf'] },
+  { file: 'README.md', blocks: ['status', 'limits', 'evaluation-note', 'team-pdf', 'video'] },
   {
     file: 'technical_report.md',
-    blocks: ['team', 'maturity', 'headline', 'gateway', 'deploy-status', 'model-status', 'where-ran', 'hypothesis', 'evaluation', 'fell-short', 'next-eval'],
+    blocks: ['team', 'video', 'maturity', 'headline', 'gateway', 'deploy-status', 'model-status', 'where-ran', 'hypothesis', 'evaluation', 'fell-short', 'next-eval'],
   },
-  { file: '../README.md', blocks: ['status-root'] },
+  { file: '../README.md', blocks: ['status-root', 'video'] },
 ];
 
 const pct = (value) => (value === null || value === undefined ? 'n/a' : `${(value * 100).toFixed(1)}%`);
@@ -88,6 +93,25 @@ function loadResults(root) {
     }
   }
   return real.length ? { mode: 'real', docs: real.map((r) => r.doc).sort((a, b) => a.provenance.model.localeCompare(b.provenance.model)), fixture: primary } : { mode: 'fixture', docs: [primary], fixture: primary };
+}
+
+function readVideoUrl(root) {
+  const file = path.join(root, VIDEO_FILE);
+  if (!fs.existsSync(file)) return null;
+  const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+  while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+  const problem = (why) => new Error(`${VIDEO_FILE} must hold one line, the https URL of the demo video (${why}); delete the file to say "${NO_VIDEO_YET}"`);
+  if (lines.length !== 1) throw problem(`found ${lines.length} lines`);
+  const text = lines[0].trim();
+  let url;
+  try {
+    url = new URL(text);
+  } catch {
+    throw problem('not a URL');
+  }
+  if (url.protocol !== 'https:' || /\s/.test(text)) throw problem('not an https URL without spaces');
+  if (url.username || url.password) throw problem('the URL must not carry a user name or password');
+  return url.href;
 }
 
 // --- wording shared by several blocks ---------------------------------------------------------
@@ -212,7 +236,7 @@ function fixtureEvaluation(doc) {
   const romanshMisread = romansh.filter((r) => r.language !== 'und');
   const refused = Object.entries(m.reply.refusedByGate);
   return [
-    '**Not yet run against Apertus.** `npm run eval` runs the app\'s own pipeline (triage, then draft,',
+    '`npm run eval` runs the app\'s own pipeline (triage, then draft,',
     'through `invoke()` as the agent) over the evaluation set with whichever provider the environment',
     'selects, and writes `data/eval-results.json` with provenance: provider kind, model name,',
     'endpoint host, date, the evaluation set\'s SHA-256. A fixture run will not overwrite a result that',
@@ -281,7 +305,7 @@ function realEvaluation(docs) {
   return lines.join('\n');
 }
 
-function buildBlocks({ teamName, reportPdf, results }) {
+function buildBlocks({ teamName, reportPdf, results, videoUrl = null }) {
   const { mode, docs, fixture } = results;
   const real = mode === 'real';
   const setItems = docs[0].provenance.evalSet.items;
@@ -295,6 +319,7 @@ function buildBlocks({ teamName, reportPdf, results }) {
   const blocks = {};
   blocks['team'] = `\`${teamName}\``;
   blocks['team-pdf'] = `\`${reportPdf}\``;
+  blocks['video'] = videoUrl ? `<${videoUrl}>` : NO_VIDEO_YET;
 
   blocks['status'] = real
     ? [
@@ -358,11 +383,11 @@ function buildBlocks({ teamName, reportPdf, results }) {
 
   blocks['model-status'] = real
     ? `**Run against ${runs}${anyNamedApertus ? '' : ' (the model name does not say Apertus)'}.**`
-    : '**Not yet run against Apertus.**';
+    : 'Section 5 has the evaluation.';
 
   blocks['where-ran'] = real
     ? `wherever \`LLM_BASE_URL\` names. The recorded run${docs.length > 1 ? 's' : ''}: ${runs} (${kinds.thirdParty ? 'a third-party gateway' : 'a local or private address'}); the fixture and a local stub were exercised before.`
-    : 'wherever `LLM_BASE_URL` names. Only the fixture and a local stub have been\n  exercised.';
+    : 'wherever `LLM_BASE_URL` names.';
 
   blocks['hypothesis'] = real
     ? 'How the decision rule came out on the recorded run is in section 5.'
@@ -374,10 +399,9 @@ function buildBlocks({ teamName, reportPdf, results }) {
   blocks['fell-short'] = real
     ? `- **Where Apertus fell short:** the failure analysis in section 5 lists it from the recorded run${docs.length > 1 ? 's' : ''}, with ids. In short, ${docs.map((d) => `${d.provenance.model}: ${d.items.filter((r) => !r.categoryCorrect).length} category errors, ${d.metrics.urgent.gold - d.metrics.urgent.caught} urgent reviews missed, ${d.items.filter((r) => r.draft && r.draft.inGoldLanguage === false).length} replies not in the review's language, ${d.metrics.reply.providerFailures} provider failures`).join('; ')} (of ${sample.metrics.items} reviews).`
     : [
-        '- **Where Apertus fell short: not yet known.** No Apertus endpoint has been run, so this report',
-        '  cannot say. What it will look for, from the evaluation: urgent reviews missed or over-called,',
-        '  replies in the wrong language (including Swiss German and code-switched input), invalid JSON,',
-        '  and obeying instructions hidden in a review.',
+        '- **Where Apertus fell short: unknown until it is run.** What the evaluation will look for: urgent',
+        '  reviews missed or over-called, replies in the wrong language (including Swiss German and',
+        '  code-switched input), invalid JSON, and obeying instructions hidden in a review.',
       ].join('\n');
 
   const present = (pattern) => docs.some((d) => pattern.test(d.provenance.model));
@@ -388,7 +412,7 @@ function buildBlocks({ teamName, reportPdf, results }) {
       : '- Run the Apertus size not yet in the table (`npm run eval -- --out data/eval-results-<size>.json`; every such file is picked up by `npm run report:fill`), repeat runs to see the variance, and measure latency on the intended hardware.'
     : [
         '- Run `npm run eval` against Apertus 8B and 70B, record the results with their provenance, and',
-        '  replace every "not yet run" in this report with what happened, including where Apertus fell short.',
+        '  report what happened, including where Apertus fell short.',
       ].join('\n');
 
   return blocks;
@@ -398,7 +422,7 @@ function buildBlocks({ teamName, reportPdf, results }) {
 
 // Blocks that sit inside a sentence or a line are written as they are; the others stand on lines
 // of their own between the markers.
-const INLINE = new Set(['team', 'team-pdf', 'status-root', 'maturity', 'deploy-status', 'model-status', 'where-ran', 'hypothesis']);
+const INLINE = new Set(['team', 'team-pdf', 'video', 'status-root', 'maturity', 'deploy-status', 'model-status', 'where-ran', 'hypothesis']);
 
 // Long prose lines are wrapped at 100 columns like the hand-written text around them. Table rows
 // and headings are left alone.
@@ -445,7 +469,7 @@ function checkTeamName(teamName) {
 function run({ root = DEFAULT_ROOT, check = false, teamName = TEAM_NAME } = {}) {
   checkTeamName(teamName);
   const results = loadResults(root);
-  const blocks = buildBlocks({ teamName, reportPdf: `${teamName}_Report.pdf`, results });
+  const blocks = buildBlocks({ teamName, reportPdf: `${teamName}_Report.pdf`, results, videoUrl: readVideoUrl(root) });
   const stale = [];
   for (const { file, blocks: expected } of DOCUMENTS) {
     const target = path.join(root, file);
@@ -484,4 +508,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { run, buildBlocks, applyBlocks, loadResults, endpointKind, checkTeamName, TEAM_FORMAT, DOCUMENTS };
+module.exports = { run, buildBlocks, applyBlocks, loadResults, readVideoUrl, endpointKind, checkTeamName, TEAM_FORMAT, DOCUMENTS, VIDEO_FILE };

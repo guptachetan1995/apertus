@@ -79,6 +79,10 @@ function toContainerHost(baseUrl) {
   return { baseUrl: url.href, rewrittenFrom };
 }
 
+function rewriteNotice(rewrittenFrom) {
+  return `LLM_BASE_URL names ${rewrittenFrom}, which inside a container is the container itself: using ${CONTAINER_HOST} to reach the host instead. If the host server cannot be reached, make it listen on 0.0.0.0 (on Linux a server bound only to 127.0.0.1 cannot be reached from a container).`;
+}
+
 function readPort(raw) {
   if (raw === undefined || raw === '') return 3000;
   const port = Number(raw);
@@ -143,4 +147,4 @@ function loadConfig(rawEnv = process.env, { inContainer = false } = {}) {
   };
 }
 
-module.exports = { TEAM_NAME, REPORT_PDF, LLM_VARS, CONTAINER_HOST, isLoopbackHost, detectContainer, loadConfig };
+module.exports = { TEAM_NAME, REPORT_PDF, LLM_VARS, CONTAINER_HOST, isLoopbackHost, detectContainer, rewriteNotice, loadConfig };

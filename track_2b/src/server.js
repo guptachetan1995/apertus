@@ -2,7 +2,7 @@
 
 const path = require('node:path');
 const express = require('express');
-const { loadConfig, detectContainer, CONTAINER_HOST } = require('./config');
+const { loadConfig, detectContainer, rewriteNotice } = require('./config');
 const { createStore } = require('./store');
 const { createProvider } = require('./providers');
 const { createInvoke } = require('./invoke');
@@ -218,9 +218,7 @@ async function start({ env = process.env, log = console.log, inContainer = detec
   const about = provider.describe();
   log(`Review triage is listening on ${origin}`);
   if (config.llm && config.llm.rewrittenFrom) {
-    log(
-      `LLM_BASE_URL names ${config.llm.rewrittenFrom}, which inside a container is the container itself: using ${CONTAINER_HOST} to reach the host instead. If the host server cannot be reached, make it listen on 0.0.0.0 (on Linux a server bound only to 127.0.0.1 cannot be reached from a container).`,
-    );
+    log(rewriteNotice(config.llm.rewrittenFrom));
   }
   log(`Provider: ${about.endpointHost ? `${about.model} via ${about.endpointHost}` : `${about.model}. Offline, and not Apertus output.`}`);
   if (!about.endpointHost) for (const line of OFFLINE_BANNER) log(line);

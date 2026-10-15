@@ -5,7 +5,8 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { setTimeout: sleep } = require('node:timers/promises');
-const { loadEvalSet, runEval, computeMetrics, parseArgs, main, DEFAULT_SET } = require('../scripts/eval');
+const { loadEvalSet, runEval, computeMetrics, parseArgs, configFor, main, DEFAULT_SET } = require('../scripts/eval');
+const { createProvider } = require('../src/providers');
 const { FakeApertusProvider } = require('../src/providers/fake-apertus-provider');
 const { OpenAICompatibleProvider } = require('../src/providers/openai-compatible-provider');
 const { startStub, readRequest } = require('./stub-llm');
@@ -268,6 +269,30 @@ describe('the command line', () => {
     expect(written.provenance).toMatchObject({ providerKind: 'openai-compatible', endpointHost: `127.0.0.1:${stub.port}`, modelNameSaysApertus: true });
     expect(written.metrics.items).toBe(4);
     expect(fs.readFileSync(out, 'utf8')).not.toContain(KEY);
+  });
+
+  describe('inside a container (make eval-docker), as the app does', () => {
+    const env = (baseUrl, extra = {}) => ({ LLM_NAME: 'swiss-ai/apertus-v1.5-8b', LLM_BASE_URL: baseUrl, LLM_API_KEY: KEY, ...extra });
+
+    test('a loopback LLM_BASE_URL is pointed at host.docker.internal, and the provenance says where the call went', () => {
+      const config = configFor(parseArgs([]), env('http://localhost:8000/v1'), true);
+      expect(config.llm).toMatchObject({ baseUrl: 'http://host.docker.internal:8000/v1', rewrittenFrom: 'localhost' });
+      expect(createProvider(config).describe().endpointHost).toBe('host.docker.internal:8000');
+    });
+
+    test('the container is recognised from APERTUS_IN_CONTAINER, which make eval-docker sets', () => {
+      const config = configFor(parseArgs([]), env('http://127.0.0.1:9/v1', { APERTUS_IN_CONTAINER: '1' }));
+      expect(config.llm.rewrittenFrom).toBe('127.0.0.1');
+    });
+
+    test('an address that is not loopback is left alone, and so is everything outside a container', () => {
+      expect(configFor(parseArgs([]), env('https://api.publicai.co/v1'), true).llm).not.toHaveProperty('rewrittenFrom');
+      expect(configFor(parseArgs([]), env('http://localhost:8000/v1'), false).llm.baseUrl).toBe('http://localhost:8000/v1');
+    });
+
+    test('--fake still ignores every LLM variable', () => {
+      expect(configFor(parseArgs(['--fake']), env('http://localhost:8000/v1'), true).llm).toBeNull();
+    });
   });
 
   test('a fixture run will not overwrite a result that came from a real endpoint', async () => {

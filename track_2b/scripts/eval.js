@@ -7,13 +7,14 @@
 // The provider is chosen exactly as the app chooses it: from LLM_NAME, LLM_BASE_URL and
 // LLM_API_KEY (or ENV_FILE=<path>), or the offline fixture provider when none is set (or with
 // --fake). Every result file records which provider produced it, so a fixture result can never
-// be mistaken for a model result.
+// be mistaken for a model result. Inside a container (`make eval-docker`) a loopback LLM_BASE_URL
+// is pointed at the host the same way the app does it.
 
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { performance } = require('node:perf_hooks');
-const { loadConfig } = require('../src/config');
+const { loadConfig, detectContainer, rewriteNotice } = require('../src/config');
 const { createProvider } = require('../src/providers');
 const { createStore, CATEGORIES } = require('../src/store');
 const { createInvoke } = require('../src/invoke');
@@ -323,9 +324,15 @@ function guardAgainstClobber(out, doc, force) {
   }
 }
 
-async function main(argv = process.argv.slice(2), env = process.env) {
+// The configuration exactly as the app reads it: --fake ignores every LLM_* variable.
+function configFor(options, env, inContainer = detectContainer(env)) {
+  return loadConfig(options.fake ? {} : env, { inContainer });
+}
+
+async function main(argv = process.argv.slice(2), env = process.env, { inContainer = detectContainer(env) } = {}) {
   const options = parseArgs(argv);
-  const config = loadConfig(options.fake ? {} : env);
+  const config = configFor(options, env, inContainer);
+  if (config.llm && config.llm.rewrittenFrom) console.log(rewriteNotice(config.llm.rewrittenFrom));
   const provider = createProvider(config);
   const { items: all, sha256 } = loadEvalSet(options.set);
   const items = options.limit ? all.slice(0, options.limit) : all;
@@ -341,7 +348,8 @@ async function main(argv = process.argv.slice(2), env = process.env) {
   guardAgainstClobber(out, doc, options.force);
   fs.writeFileSync(out, `${JSON.stringify(doc, null, 2)}\n`);
   console.log(summarise(doc));
-  console.log(`wrote ${path.relative(process.cwd(), out)}`);
+  const relative = path.relative(process.cwd(), out);
+  console.log(`wrote ${relative.startsWith('..') ? out : relative}`);
   return doc;
 }
 
@@ -352,4 +360,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { loadEvalSet, runEval, computeMetrics, parseArgs, summarise, main, DEFAULT_OUT, DEFAULT_SET };
+module.exports = { loadEvalSet, runEval, computeMetrics, parseArgs, summarise, configFor, main, DEFAULT_OUT, DEFAULT_SET };

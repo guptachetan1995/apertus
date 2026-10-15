@@ -5,7 +5,12 @@ A deeper write-up than the README: what was built, how it works, and what the nu
 - **Track:** `Track 2B — Own Project`
 - **Event:** Online
 - **Team:** Chetan Gupta (identifier <!-- generated:team:start -->`ChetanGupta`<!-- generated:team:end -->)
-- **Demo:** video link added at submission
+- **When it was made:** a first README draft, a placeholder licence file and private planning notes
+  date from 24 Sep 2026, before the hacking period. All code, tests, data and this report were
+  written from 7 Oct 2026 (first commit 7 Oct 00:52 IST, which is 6 Oct 21:22 CEST), inside the 1 to
+  16 Oct hacking period, with Claude Code as the coding assistant (section 6). The public repository
+  is a single commit made by the publishing script, so its history does not show these dates.
+- **Demo video:** <!-- generated:video:start -->see the submission form<!-- generated:video:end -->
 - **Declared maturity level:** **proof of concept**. The control flow, the approval gate, the
   dashboard and the client for an OpenAI-compatible model endpoint are built and tested; the <!-- generated:maturity:start -->quality of Apertus's classifications and replies has **not been measured yet** (section 5).<!-- generated:maturity:end -->
 - **Status of this report:** it describes the code at the commit of the submitted repository.
@@ -76,16 +81,23 @@ check. The image sets no `LLM_*` variable and holds no secret: the model name, e
 arrive at run time by name from the environment (or a file named by `ENV_FILE`). It copies `src/`
 and the two data files the server reads, so the evaluation set, tests and documents are not in it.
 
-What has and has not been run: the container's code path, the client, the retries and the
-timeouts have been run against a local stub server, and tests check that the files the Dockerfile
-copies are enough to start the server read-only and pass the image's own health check. **The image
-was built and run from a clean copy on 15 Oct 2026 (the Makefile's commands by hand) and on 16 Oct
-2026 (`make run` itself), on the fixture provider (healthy, unprivileged user, read-only
-filesystem, the full demo flow over HTTP), <!-- generated:deploy-status:start -->but no real Apertus server has been run, so neither the
+**What was run, when, on what.** All runs were on the author's Mac (Docker Desktop, Apple
+silicon). The client, the retries and the timeouts were also run against a local stub server, and
+tests check that the files the Dockerfile copies are enough to start the server read-only and pass
+the image's own health check.
+
+| When | What was run | On what | Result |
+|---|---|---|---|
+| 15 Oct 2026 | The Makefile's own `docker build` and `docker run` commands, by hand, from a clean copy | Offline fixture provider | Image built and healthy; unprivileged user, read-only filesystem; the whole demo flow served over HTTP |
+| 16 Oct 2026 | `make -n run`, and `make test` (lint and tests) from `track_2b/` and from the repository root | GNU Make 3.81 | The expected commands were printed; lint and the tests passed |
+| 16 Oct 2026 | `make run` from a clean copy (`git archive` of the branch) | Offline fixture provider | Image built, healthy as the `node` user, read-only filesystem, every capability dropped; owner link, run the agent, publish by the owner, the agent's publish refused as `forbidden_actor`, a forged owner as `forged_actor` |
+| 16 Oct 2026 | `make run` with `LLM_BASE_URL=http://localhost:<port>/v1` | A stub model server on the host, not a model | Loopback rewritten to `host.docker.internal`; all 6 reviews triaged and drafted from the stub |
+| 16 Oct 2026 | `make run` from a fresh clone of the public repository | Offline fixture provider, port 3100 | Image built and healthy |
+| Not run | Linux; Windows; `make run` with a real Apertus endpoint; `make eval-docker` | | |
+
+**Every container run above was on the fixture provider or a stub model server, <!-- generated:deploy-status:start -->but no real Apertus server has been run, so neither the
 on-premise nor the air-gapped deployment has been exercised end to end.**<!-- generated:deploy-status:end --> A loopback `LLM_BASE_URL`
-inside the container is rewritten to `host.docker.internal` (the Makefile maps it to the host);
-that rewrite is unit-tested and was run in the container against a stub model server on the host
-(Docker Desktop for Mac), not against a real one.
+inside the container is rewritten to `host.docker.internal`, which the Makefile maps to the host; that rewrite is unit-tested.
 
 **Build time versus runtime.**
 
@@ -106,17 +118,32 @@ project has not used one.
 
 ## 3. Use of Apertus
 
+**Why Apertus.** Replies go out in the guest's own language, and the reviews are customer text a
+business may not want to send to a third party. Apertus fits both. Its authors report pretraining
+on 15 trillion tokens from over 1800 languages, about 40% of it non-English [2]; the 1.0
+announcement names Swiss German and Romansh among the languages it covers that other models
+underrepresent [1], and the evaluation set (section 4) tests both. The project's own FAQ says
+Apertus is fully conversational in a few dozen languages and tells users to evaluate for theirs
+[4], which is what section 5 is for: this report makes no claim yet about how well Apertus writes
+German, French, Italian or Romansh. The weights are Apache-2.0, and the training-data sources and
+recipes are published [1][3], so the model can run on the organisation's own hardware, which is
+the declared on-premise target (section 2): review text then reaches no third party. The Canton of
+Ticino runs a fine-tuned Apertus 8B in its own data centre for confidential multilingual
+translation [5]. Apertus was built in Switzerland by ETH Zurich, EPFL and CSCS with attention to
+Swiss data protection and copyright law [1]; providers that host it in Swiss data centres are
+listed in [6], and pointing `LLM_BASE_URL` at one is the sovereign-cloud variant (a configuration,
+not what is declared here).
+
 - **Model:** target `swiss-ai/Apertus-v1.5-8B`; `swiss-ai/Apertus-v1.5-70B` as the comparison.
   Apache-2.0 licence with a usage policy and a privacy policy; both repositories are **gated** on
   Hugging Face (an account that has accepted the terms, and shared its email, is needed to download
-  the weights, on the model host, not in this image). <!-- generated:model-status:start -->**Not yet run against Apertus.**<!-- generated:model-status:end -->
+  the weights, on the model host, not in this image). <!-- generated:model-status:start -->Section 5 has the evaluation.<!-- generated:model-status:end -->
 - **Usage type:** prompting only, no fine-tuning. Per review, two chat calls at temperature 0:
   one classifies (language, category, an English reason quoting the deciding words), one drafts the
   reply in the detected language with an English rationale for the owner. The review text sits
   between markers and the system prompt says it is data, not instructions. The server, not the
   model, enforces what a draft may do.
-- **Where it runs:** <!-- generated:where-ran:start -->wherever `LLM_BASE_URL` names. Only the fixture and a local stub have been
-  exercised.<!-- generated:where-ran:end --> **Serving, per the Apertus project's own vLLM guide (github.com/swiss-ai/www-apertus,
+- **Where it runs:** <!-- generated:where-ran:start -->wherever `LLM_BASE_URL` names.<!-- generated:where-ran:end --> **Serving, per the Apertus project's own vLLM guide (github.com/swiss-ai/www-apertus,
   read 16 Oct 2026, not run here):** Apertus 1.5 is not yet merged into upstream vLLM or
   transformers, so the guide points to the project's vLLM fork or its prebuilt image
   `ghcr.io/swiss-ai/vllm_apertus_1.5_release`, started with `vllm serve swiss-ai/Apertus-v1.5-8B
@@ -161,7 +188,7 @@ dataset, are CDLA-Permissive-2.0, as is the optional Hugging Face dataset if one
 ## 5. Evaluation
 
 <!-- generated:evaluation:start -->
-**Not yet run against Apertus.** `npm run eval` runs the app's own pipeline (triage, then draft,
+`npm run eval` runs the app's own pipeline (triage, then draft,
 through `invoke()` as the agent) over the evaluation set with whichever provider the environment
 selects, and writes `data/eval-results.json` with provenance: provider kind, model name,
 endpoint host, date, the evaluation set's SHA-256. A fixture run will not overwrite a result that
@@ -190,8 +217,13 @@ What the fixture result shows is about the set and the harness, not a model:
 
 The tests are about the gate and the plumbing, not the model. A smuggled `replyStatus`, a
 wrong-language reply, an agent calling `publish_reply` or `reject_reply`, and a forged actor over
-HTTP are all refused; 300 seeded random agent calls never reach `published`. The gate tests were
-mutation-checked: removing any one of the checks made the suite fail. The provider's tests run
+HTTP are all refused; 300 seeded random agent calls never reach `published`. `npm run
+mutation-check` takes a throw-away copy, removes one of ten gate checks at a time (the owner-only
+resolution in `invoke()`, each owner verb's own actor check, the store's no-draft and stale-draft
+refusals, the separate agent registry, the argument and reply-language checks, the HTTP forged-actor
+and owner-route checks) and requires the suite to fail each time. On 16 Oct 2026 all ten were
+noticed; the first run found one that was not (`invoke()`'s own check, masked by the verb's), and a
+test now covers it. The provider's tests run
 against a local stub server (malformed JSON, an out-of-range category, a wrong-language reply, a
 timeout, a 401, a 5xx, an unreachable host) and check that the key appears in no log or error.
 
@@ -216,22 +248,16 @@ tokens/s for one request on one 24 GB GPU, prompt reading 0.5 s; 20 s of the own
 ## 6. Limitations and declarations
 
 <!-- generated:fell-short:start -->
-- **Where Apertus fell short: not yet known.** No Apertus endpoint has been run, so this report
-  cannot say. What it will look for, from the evaluation: urgent reviews missed or over-called,
-  replies in the wrong language (including Swiss German and code-switched input), invalid JSON,
-  and obeying instructions hidden in a review.
+- **Where Apertus fell short: unknown until it is run.** What the evaluation will look for: urgent
+  reviews missed or over-called, replies in the wrong language (including Swiss German and
+  code-switched input), invalid JSON, and obeying instructions hidden in a review.
 <!-- generated:fell-short:end -->
 - **Four languages.** The server's language check covers German, French, Italian and English; a
   review in another language, and some very short ones, are left for the owner.
 - **Prompted JSON, not constrained decoding.** The server validates what comes back and retries
   once; it does not rely on the endpoint to force a schema.
-- **The Docker path.** `track_2b/Dockerfile` and `track_2b/Makefile` define `make run`. On 15 Oct
-  2026 the Makefile's `docker build` and `docker run` commands were run by hand from a clean copy:
-  the image built, became healthy on the fixture provider as the unprivileged `node` user on a
-  read-only filesystem, and served the demo flow over HTTP. On 16 Oct 2026 `make -n run` and `make
-  test` were run (GNU Make 3.81), and `make run` itself was run from a clean copy (fixture provider,
-  and a stub model server on the host); it has not been run on Linux or Windows. The image runs
-  Node.js 24.21.0; the author's tests ran on Node.js 26.1.0.
+- **The container path.** Exercised only as the table in section 2 shows. The image runs Node.js
+  24.21.0; the author's tests ran on Node.js 26.1.0.
 - **What "publish" does, and where reviews come from.** Reviews come only from the seed file
   `data/seed-reviews.json`; no review is fetched from Google, Tripadvisor or any other platform,
   and none is posted to one. `publish_reply` flips an in-memory status and stores the approved
@@ -257,7 +283,9 @@ tokens/s for one request on one 24 GB GPU, prompt reading 0.5 s; 20 s of the own
   local stub).
 - **Evaluation:** `npm run eval` or `make eval`, with the variables above for a real endpoint;
   results land in `data/eval-results.json`, and `npm run report:fill` rewrites the generated parts
-  of this report and the README from them (and from `TEAM_NAME` in `src/config.js`).
+  of this report and the README from them (and from `TEAM_NAME` in `src/config.js`). With only
+  Docker: `make eval-docker` runs the same harness in the pinned Node.js image and writes
+  `eval-out/eval-results.json`, to be moved into `data/`; it has not been run (section 2).
 - **This report as PDF:** `npm run report:pdf` (the installed Chrome; fails above 6 pages).
 - **Hardware and runtime:** any machine with Docker and make; image `node:24.21.0-bookworm-slim`
   (Node.js 24, the LTS line on 7 October 2026). The image needs no GPU: the model runs wherever
@@ -268,7 +296,7 @@ tokens/s for one request on one 24 GB GPU, prompt reading 0.5 s; 20 s of the own
 
 <!-- generated:next-eval:start -->
 - Run `npm run eval` against Apertus 8B and 70B, record the results with their provenance, and
-  replace every "not yet run" in this report with what happened, including where Apertus fell short.
+  report what happened, including where Apertus fell short.
 <!-- generated:next-eval:end -->
 - Measure latency and throughput on the real endpoint and replace the planning arithmetic above.
 - Add a second annotator for the evaluation labels, and Romansh checked by a native speaker.
@@ -289,3 +317,12 @@ dataset in `data/` is CDLA-Permissive-2.0 (see `NOTICE`). Copyright (c) 2026 Che
 - Hack Apertus project template: <https://github.com/HackApertus/project-template>
 - Apertus v1.5 weights: <https://huggingface.co/swiss-ai/Apertus-v1.5-8B> and
   <https://huggingface.co/swiss-ai/Apertus-v1.5-70B>
+
+Read on 16 Oct 2026 (the model cards are gated; these are public pages):
+
+1. ETH Zurich, EPFL and CSCS, "Apertus 1.0", 2 Sep 2025: <https://www.apertus-ai.org/articles/2025-09-apertus-1-0/>
+2. "Apertus: Democratizing Open and Compliant LLMs for Global Language Environments", arXiv:2509.14233 (abstract): <https://arxiv.org/abs/2509.14233>
+3. "Apertus 1.5", project announcement: <https://www.apertus-ai.org/articles/2026-07-apertus-1-5/>
+4. Apertus FAQ, "What languages does Apertus support?": <https://www.apertus-ai.org/docs/faq/>
+5. "Fine-tuned model powers in-house AI translation" (Canton of Ticino): <https://www.apertus-ai.org/articles/2026-03-ticino/>
+6. "Apertus 1.5 general availability", list of providers: <https://www.apertus-ai.org/articles/2026-09-apertus-1-5-ga/>
